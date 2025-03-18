@@ -3,6 +3,8 @@
   stdenv,
   fetchFromGitHub,
   cmake,
+  config,
+  cudaSupport ? config.cudaSupport,
   cudaPackages_12_6,
   anari-sdk,
   python3,
@@ -21,24 +23,28 @@ stdenv.mkDerivation {
     fetchSubmodules = true;
   };
 
-  nativeBuildInputs = [
-    cudaPackages_12_6.cuda_nvcc
+  nativeBuildInputs =
+    [
+      cmake
+      python3
+    ]
+    ++ lib.optionals cudaSupport [
+      cudaPackages_12_6.cuda_nvcc
+    ];
 
-    cmake
-    python3
-  ];
-
-  buildInputs = [
-    anari-sdk
-    visionaray
-
-    # CUDA and OptiX
-    cudaPackages_12_6.cuda_cudart
-    cudaPackages_12_6.cuda_cccl
-  ];
+  buildInputs =
+    [
+      anari-sdk
+      visionaray
+    ]
+    ++ lib.optionals cudaSupport [
+      # CUDA and OptiX
+      cudaPackages_12_6.cuda_cudart
+      cudaPackages_12_6.cuda_cccl
+    ];
 
   cmakeFlags = [
-    "-DANARI_VISIONARAY_ENABLE_CUDA=ON"
+    "-DANARI_VISIONARAY_ENABLE_CUDA=${if cudaSupport then "ON" else "OFF"}"
     "-DANARI_VISIONARAY_ENABLE_NANOVDB=ON"
   ];
 
@@ -46,6 +52,6 @@ stdenv.mkDerivation {
     description = "A C++ based, cross platform ray tracing library, exposed through ANARI.";
     homepage = "https://github.com/szellmann/anari-visionaray";
     license = licenses.bsd3;
-    platforms = platforms.linux;
+    platforms = platforms.unix;
   };
 }
