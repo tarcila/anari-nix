@@ -31,4 +31,4 @@ jobs:
         with:
           name: dldt
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-      - run: nix flake check
+      - run: nix flake check --accept-flake-config
