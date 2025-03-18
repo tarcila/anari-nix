@@ -43,8 +43,6 @@ stdenv.mkDerivation {
 
   buildInputs =
     [
-      cudaPackages.cuda_cccl
-      cudaPackages.cuda_cudart
       freeglut
       libjpeg
       libpng
@@ -81,6 +79,6 @@ stdenv.mkDerivation {
     description = "A C++ based, cross platform ray tracing library.";
     homepage = "https://vis.uni-koeln.de/forschung/software-visionaray";
     license = licenses.mit;
-    platforms = platforms.linux;
+    platforms = platforms.unix;
   };
 }
