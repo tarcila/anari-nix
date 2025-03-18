@@ -18,7 +18,9 @@ PATTERN="${1:-*}"
 NIX_ROOT=".?rev=$(git rev-parse HEAD)"
 echo "Using ${NIX_ROOT} as a reference package set"
 
-readarray -t PACKAGES < <(nix eval --json ${NIX_ROOT}#packages.x86_64-linux --apply 'builtins.attrNames' | jq -r '.[]')
+NIX_EVAL="nix eval --accept-flake-config"
+
+readarray -t PACKAGES < <(${NIX_EVAL} --json ${NIX_ROOT}#packages.x86_64-linux --apply 'builtins.attrNames' | jq -r '.[]')
 
 declare -a NIX_FILES
 NIX_FILES=()
@@ -28,20 +30,20 @@ for PACKAGE in "${PACKAGES[@]}"; do
     continue
   fi
 
-  if test -z "$(nix eval --raw ${NIX_ROOT}#${PACKAGE} --apply 'drv: drv.src or ""')"; then
+  if test -z "$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE} --apply 'drv: drv.src or ""')"; then
     echo "Skipping ${PACKAGE} not defining src"
     continue
   fi
 
-  SRC_TYPE="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src --apply builtins.typeOf)"
+  SRC_TYPE="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src --apply builtins.typeOf)"
   case "${SRC_TYPE}" in
   path)
     echo "Skipping ${PACKAGE} using local path source path"
     continue
     ;;
   set)
-    if test -n "$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src --apply 'drv: drv.url or ""')"; then
-      URL="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src.url)"
+    if test -n "$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src --apply 'drv: drv.url or ""')"; then
+      URL="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src.url)"
       IS_GITHUB="$(
         test -z "${URL//https:\/\/github.com\/*/}"
         echo $?
@@ -58,21 +60,21 @@ for PACKAGE in "${PACKAGES[@]}"; do
   esac
 
   if test $IS_GITHUB == 0; then
-    NIX_FILE="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.meta.position | cut -f-1 -d: | sed -e "s,/nix/store/[[:alnum:]]\+-source/,${CURDIR}/,")"
+    NIX_FILE="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.meta.position | cut -f-1 -d: | sed -e "s,/nix/store/[[:alnum:]]\+-source/,${CURDIR}/,")"
     echo "Checking for ${PACKAGE} updates hosted at ${URL} (${NIX_FILE})"
 
-    REPO_OWNER="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src.owner)"
-    REPO="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src.repo)"
+    REPO_OWNER="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src.owner)"
+    REPO="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src.repo)"
 
-    TAG="$(nix eval --raw ${NIX_ROOT}#${PACKAGE} --apply 'what: if what.src.tag != null then what.src.tag else ""')"
+    TAG="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE} --apply 'what: if what.src.tag != null then what.src.tag else ""')"
     if test -n "${TAG}"; then
       echo "Skipping ${PACKAGE} using version pinned to tag ${TAG}"
       continue
     fi
 
-    CURRENT_HEAD="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src.rev)"
-    CURRENT_HASH="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src.outputHash)"
-    CURRENT_VERSION="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.version)"
+    CURRENT_HEAD="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src.rev)"
+    CURRENT_HASH="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src.outputHash)"
+    CURRENT_VERSION="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.version)"
 
     if test -z "${CURRENT_HEAD##v*}" -o \( "${CURRENT_HEAD}" != "${CURRENT_HEAD//./}" \); then
       NEW_HEAD="$(gh release view -R ${REPO_OWNER}/${REPO} --json tagName -q ".tagName")"
@@ -81,7 +83,7 @@ for PACKAGE in "${PACKAGES[@]}"; do
       echo "Latest tagged version ${NEW_HEAD}"
     else
       _HEAD_EVAL_STRING='src: if (src ? "branchName") && (src.branchName != null) then src.branchName else "HEAD"'
-      REMOTE_HEAD="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src --apply "${_HEAD_EVAL_STRING}")"
+      REMOTE_HEAD="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src --apply "${_HEAD_EVAL_STRING}")"
       if test "${REMOTE_HEAD}" == "HEAD"; then
         REMOTE_HEAD="$(gh repo view ${REPO_OWNER}/${REPO} --json defaultBranchRef -q ".defaultBranchRef.name")"
       fi
@@ -107,7 +109,7 @@ for PACKAGE in "${PACKAGES[@]}"; do
     fi
 
     echo "Updating HEAD to ${NEW_HEAD}, from ${CURRENT_HEAD} (${CURRENT_VERSION} => ${NEW_VERSION})"
-    NEW_SOURCE_URL="$(nix eval --raw ${NIX_ROOT}#${PACKAGE}.src.url | sed -e "s,${CURRENT_HEAD},${NEW_HEAD},")"
+    NEW_SOURCE_URL="$(${NIX_EVAL} --raw ${NIX_ROOT}#${PACKAGE}.src.url | sed -e "s,${CURRENT_HEAD},${NEW_HEAD},")"
     case "${NEW_SOURCE_URL}" in
     *.git)
       NEW_HASH="$(nix-prefetch-git --fetch-submodules --rev "${NEW_HEAD}" "${NEW_SOURCE_URL}" 2>/dev/null | jq -r ".hash")"

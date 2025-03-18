@@ -12,7 +12,7 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: nix-shell --command ./scripts/update-dependencies.sh
+      - run: nix-shell --command ./scripts/update-packages-version.sh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: peter-evans/create-pull-request@v7
@@ -22,10 +22,11 @@ jobs:
           author: "dldt bot <203830002+dldt-bot@users.noreply.github.com>"
           push-to-fork: dldt-bot/anari-nix
           base: "main"
-          labels: "dependencies"
+          labels: "packages-version"
           draft: true
           delete-branch: true
           sign-commits: true
-          title: "Update dependencies"
-          body: "This PR updates the flake.lock file."
-          branch: "update-flake-lock"
+          title: "Update packages to latest version"
+          body: "This PR updates packages to latest version."
+          branch: "update-packages"
+          commit-message: "Update packages to latest version"

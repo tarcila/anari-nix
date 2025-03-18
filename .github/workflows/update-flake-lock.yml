@@ -27,3 +27,4 @@ jobs:
           title: "Update flake.lock"
           body: "This PR updates the flake.lock file."
           branch: "update-flake-lock"
+          commit-message: "Update flake.lock"
