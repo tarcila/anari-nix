@@ -14,18 +14,24 @@ import subprocess
 import sys
 
 # Some useful regexp
-replacestorepath = re.compile(r'/nix/store/\w+-source/')
+replacestorepath = re.compile(r"/nix/store/\w+-source/")
 replacerev = re.compile(r'(\s*rev\s*=\s*)"([0-9a-fa-f]+)"')
 replacehash = re.compile(r'(\s*hash\s*=\s*)"([+-=/\w]+)"')
 replaceversion = re.compile(r'(\s*version\s*=\s*)"([-.\w]+)"')
 
 
 def getpackages(url):
-    result = subprocess.run(["nix", "eval", f"--accept-flake-config", f"{url}#packagesDetails", "--json"], check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = subprocess.run(
+        ["nix", "eval", f"--accept-flake-config", f"{url}#packagesDetails", "--json"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
     if result.returncode != 0:
         print("Error: ", result.stderr.decode())
         return None
     return json.loads(result.stdout.decode())
+
 
 def checkrepostatus(repo):
     repostatus = repo.status()
@@ -64,7 +70,9 @@ with Github(auth=auth) as g:
             continue
         if desc["sourcetype"] == "github":
             try:
-                print(f"Checking {name} for update, using github source, defined in {desc["definition"]}")
+                print(
+                    f"Checking {name} for update, using github source, defined in {desc["definition"]}"
+                )
                 if "tag" in desc:
                     print(f"  Pinned to an explicit tag {desc["tag"]}. Skipping.")
                     continue
@@ -78,18 +86,22 @@ with Github(auth=auth) as g:
                     continue
 
                 # Get updated revision information
-                currenthead=desc["rev"]
-                currentversion=desc["version"]
+                currenthead = desc["rev"]
+                currentversion = desc["version"]
                 newhead = None
                 newversion = None
                 remotehead = None
 
                 nixrepo = g.get_repo(f"{desc["owner"]}/{desc["repo"]}")
-                if len(desc["rev"]) in (40, 64) and all(c in "0123456789abcdef" for c in desc["rev"]):
+                if len(desc["rev"]) in (40, 64) and all(
+                    c in "0123456789abcdef" for c in desc["rev"]
+                ):
                     remotehead = desc.get("branchName", nixrepo.default_branch)
                     newhead = nixrepo.get_branch(remotehead).commit.sha
                 else:
-                    newhead = next(dropwhile(lambda r: r.prerelease, nixrepo.get_releases()), None)
+                    newhead = next(
+                        dropwhile(lambda r: r.prerelease, nixrepo.get_releases()), None
+                    )
                     if newhead is None:
                         print(f"  Cannot find a valid new release. Skipping")
                         continue
@@ -107,11 +119,20 @@ with Github(auth=auth) as g:
                         print("  No remote head found. Skipping.")
                     tmpdir = mkdtemp()
                     try:
-                        clone = clone_repository(nixrepo.clone_url, tmpdir, bare=False, checkout_branch=remotehead)
+                        clone = clone_repository(
+                            nixrepo.clone_url,
+                            tmpdir,
+                            bare=False,
+                            checkout_branch=remotehead,
+                        )
                         try:
-                            newversion = clone.describe(describe_strategy=GIT_DESCRIBE_TAGS)
+                            newversion = clone.describe(
+                                describe_strategy=GIT_DESCRIBE_TAGS
+                            )
                         except Exception as e:
-                            count = reduce(lambda acc, _: acc + 1, clone.walk(clone.head.target), 0)
+                            count = reduce(
+                                lambda acc, _: acc + 1, clone.walk(clone.head.target), 0
+                            )
                             newversion = f"v0.0.0-{count}-g{clone.head.peel().short_id}"
                     except Exception as e:
                         print(f"  Error: {e}")
@@ -124,21 +145,62 @@ with Github(auth=auth) as g:
                 currenthash = desc["hash"]
                 if currenturl.endswith(".git"):
                     # Given our use of fetchFromGithub, A git url usually implies that we are fetching submodules too. Otherwise, that would be an archive.
-                    result = subprocess.run(["nix-prefetch-git", "--fetch-submodules", "--rev", newhead, currenturl], check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    result = subprocess.run(
+                        [
+                            "nix-prefetch-git",
+                            "--fetch-submodules",
+                            "--rev",
+                            newhead,
+                            currenturl,
+                        ],
+                        check=False,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                    )
                     if result.returncode != 0:
                         print("  Failed fetching from url {cururl}: ", result.stderr)
                         continue
                     newhash = json.loads(result.stdout.decode().strip())["hash"]
-                elif currenturl.endswith(".tgz") or currenturl.endswith(".tbz2") or currenturl.endswith(".txz") or currenturl.endswith(".zip") or currenturl.endswith(".tar.gz") or currenturl.endswith(".tar.bz2") or currenturl.endswith(".tar.xz"):
+                elif (
+                    currenturl.endswith(".tgz")
+                    or currenturl.endswith(".tbz2")
+                    or currenturl.endswith(".txz")
+                    or currenturl.endswith(".zip")
+                    or currenturl.endswith(".tar.gz")
+                    or currenturl.endswith(".tar.bz2")
+                    or currenturl.endswith(".tar.xz")
+                ):
                     newurl = currenturl.replace(currenthead, newhead)
-                    result = subprocess.run(["nix-prefetch-url", "--unpack", newurl], check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    result = subprocess.run(
+                        ["nix-prefetch-url", "--unpack", newurl],
+                        check=False,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                    )
                     if result.returncode != 0:
                         print("  Failed fetching from url {cururl}: ", result.stderr)
                         continue
                     newsha256 = result.stdout.decode().strip()
-                    result = subprocess.run(["nix", "hash", "convert", "--hash-algo", "sha256", "--to", "sri", newsha256], check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    result = subprocess.run(
+                        [
+                            "nix",
+                            "hash",
+                            "convert",
+                            "--hash-algo",
+                            "sha256",
+                            "--to",
+                            "sri",
+                            newsha256,
+                        ],
+                        check=False,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                    )
                     if result.returncode != 0:
-                        print("  Failed converting hash {newsha256} to sri: ", result.stderr)
+                        print(
+                            "  Failed converting hash {newsha256} to sri: ",
+                            result.stderr,
+                        )
                         continue
                     newhash = result.stdout.decode().strip()
 
@@ -151,8 +213,6 @@ with Github(auth=auth) as g:
 
                 print(f"  Updating from {currentversion} to {newversion} ({newhash})")
 
-
-
                 sourcenix = desc["definition"]
                 targetnix = replacestorepath.sub(nixworkdir, sourcenix)
                 print(f"    Updating {sourcenix} to {targetnix}")
@@ -160,12 +220,17 @@ with Github(auth=auth) as g:
                 with open(sourcenix, "rt") as f:
                     content = f.read()
 
-                replaceexisting = lambda what, withwhat: \
-                    lambda m: f'{m.group(1)}"{withwhat}"' if m.group(2) == what else m.group(0)
+                replaceexisting = lambda what, withwhat: lambda m: (
+                    f'{m.group(1)}"{withwhat}"' if m.group(2) == what else m.group(0)
+                )
 
                 content = replacerev.sub(replaceexisting(currenthead, newhead), content)
-                content = replacehash.sub(replaceexisting(currenthash, newhash), content)
-                content = replaceversion.sub(replaceexisting(currentversion, newversion), content)
+                content = replacehash.sub(
+                    replaceexisting(currenthash, newhash), content
+                )
+                content = replaceversion.sub(
+                    replaceexisting(currentversion, newversion), content
+                )
 
                 with open(targetnix, "w+t") as f:
                     f.write(content)
@@ -179,18 +244,22 @@ with Github(auth=auth) as g:
                 print(f"Error: {e}")
                 continue
 
-
-
-
         else:
             print(f"Skipping {name} using unsupported source type {desc["sourcetype"]}")
             continue
 
 if updatedfiles:
     print(f"Formatting {len(updatedfiles)} files")
-    result = subprocess.run(["nix", "fmt"] + updatedfiles, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = subprocess.run(
+        ["nix", "fmt"] + updatedfiles,
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
     if result.returncode != 0:
         print("Error: ", result.stderr)
         sys.exit(1)
 
-    print("Some packages were updated. Make sure to run 'nix flake check --impure' or 'nix build .#package-that-has-been-updated --impure'.")
+    print(
+        "Some packages were updated. Make sure to run 'nix flake check --impure' or 'nix build .#package-that-has-been-updated --impure'."
+    )
