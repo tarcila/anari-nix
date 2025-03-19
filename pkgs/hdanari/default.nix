@@ -21,7 +21,7 @@ let
   };
 in
 stdenv.mkDerivation {
-  pname = " hdanari";
+  pname = "hdanari";
   version = "v0.13.1-3-gae6bcdc";
 
   # Main source
