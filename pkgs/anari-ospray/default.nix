@@ -8,7 +8,7 @@
   embree,
   ospray,
   openvkl,
-  rkcommon_0_14_0,
+  rkcommon_0_14_2,
 }:
 stdenv.mkDerivation {
   pname = "anari-ospray";
@@ -36,7 +36,7 @@ stdenv.mkDerivation {
     embree
     ospray
     openvkl
-    rkcommon_0_14_0
+    rkcommon_0_14_2
   ];
 
   meta = with lib; {

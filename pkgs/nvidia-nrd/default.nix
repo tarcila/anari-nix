@@ -8,12 +8,12 @@
   cmakeCurses,
 }:
 let
-  version = "v4.14.1";
+  version = "v4.14.2";
   src = fetchFromGitHub {
     owner = "NVIDIA-RTX";
     repo = "NRD";
     rev = version;
-    hash = "sha256-Zqvb1q9cSGHBdvio5BXuoahlaG/xhigTeppy3ozsCFo=";
+    hash = "sha256-5X4AeaUpPWoNZ8dvGuSq6NSBF1tZyvZpGvE2EjvRN84=";
     fetchSubmodules = true;
   };
 
@@ -21,16 +21,16 @@ let
     name = "mathlib-src";
     owner = "NVIDIA-RTX";
     repo = "MathLib";
-    rev = "ce3142d54f5ab523bb39c184d905ad9786af0620";
-    hash = "sha256-UCfj+7b/KRtjG2IpPAgtczbZrgkTixMQnhcorFbV+uM=";
+    rev = "9888e8e56b4b24b853e83e91209db868d1b008a7";
+    hash = "sha256-RekwH2hONuh1pmJ1PZX2tdRg8llCTuxasWXzZ4xJTOk=";
   };
 
   shadermake_src = fetchFromGitHub {
     name = "shadermake-src";
     owner = "NVIDIA-RTX";
     repo = "ShaderMake";
-    rev = "66a89a4beed48e994008ffca33bfdae8244e288a";
-    hash = "sha256-qbTEJz+UDstYzLbnCeQLtp6WGpxaVnw6iD6UCwbSPvg=";
+    rev = "c8573cbe0621d64932e09dc3146863be83502950";
+    hash = "sha256-8Jv4BMgvAo331PpqCXRnnnIo/LkNoEfXWNeA0hbtYFw=";
   };
 in
 stdenv.mkDerivation {
