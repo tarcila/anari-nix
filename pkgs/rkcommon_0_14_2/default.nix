@@ -6,19 +6,19 @@
   tbb_2021_11,
 }:
 let
-  version = "v1.14.0";
+  version = "v1.14.2";
 
   # Main source.
   src = fetchFromGitHub {
     owner = "RenderKit";
     repo = "rkcommon";
     tag = version;
-    hash = "sha256-nUtoPImNM84XJmVvulEXaSsbiH2sfDEJwm2FkSR1Q94=";
+    hash = "sha256-ezUvl/zr/mLEN4lJnvZRvFbf619JpaqfvqXbEa62Ovc=";
   };
 in
 stdenv.mkDerivation {
   inherit src version;
-  pname = "rkcommon0_14_0";
+  pname = "rkcommon0_14_2";
 
   nativeBuildInputs = [
     cmake

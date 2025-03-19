@@ -5,7 +5,7 @@
   ispc,
   lib,
   openvdb,
-  rkcommon_0_14_0,
+  rkcommon_0_14_2,
   stdenv,
   tbb_2021_11,
 }:
@@ -36,7 +36,7 @@ stdenv.mkDerivation {
   buildInputs = [
     embree
     openvdb
-    rkcommon_0_14_0
+    rkcommon_0_14_2
     tbb_2021_11
   ];
 

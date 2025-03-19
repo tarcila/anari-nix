@@ -8,7 +8,7 @@ in
       anari-sdk
       openvkl
       ospray
-      rkcommon_0_14_0
+      rkcommon_0_14_2
       ;
   };
   anari-sdk = callPackage ./anari-sdk { inherit (self) webpconfig_cmake tinygltf; };
@@ -22,9 +22,9 @@ in
   nvidia-mdl = callPackage ./nvidia-mdl { };
   nvidia-nrd = callPackage ./nvidia-nrd { };
   openvdb-tools = callPackage ./openvdb-tools { };
-  openvkl = callPackage ./openvkl { inherit (self) rkcommon_0_14_0; };
-  ospray = callPackage ./ospray { inherit (self) openvkl rkcommon_0_14_0; };
-  rkcommon_0_14_0 = callPackage ./rkcommon_0_14_0 { };
+  openvkl = callPackage ./openvkl { inherit (self) rkcommon_0_14_2; };
+  ospray = callPackage ./ospray { inherit (self) openvkl rkcommon_0_14_2; };
+  rkcommon_0_14_2 = callPackage ./rkcommon_0_14_2 { };
   tinygltf = callPackage ./tinygltf { };
   tsd = callPackage ./tsd { inherit (self) anari-sdk conduit; };
   visgl = callPackage ./visgl { inherit (self) anari-sdk; };
