@@ -17,8 +17,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch-token: ${{ secrets.DLDT_BOT_PAT }}
+          token: ${{ secrets.DLDT_BOT_PAT }}
           author: "dldt bot <203830002+dldt-bot@users.noreply.github.com>"
           push-to-fork: dldt-bot/anari-nix
           base: "main"
