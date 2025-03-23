@@ -8,12 +8,12 @@
   cmakeCurses,
 }:
 let
-  version = "v4.14.2";
+  version = "v4.14.3";
   src = fetchFromGitHub {
     owner = "NVIDIA-RTX";
     repo = "NRD";
     rev = version;
-    hash = "sha256-5X4AeaUpPWoNZ8dvGuSq6NSBF1tZyvZpGvE2EjvRN84=";
+    hash = "sha256-oQmLUN5Bh485+Zu8VxW38aiEpVNfkCCD//4MgjxQYD0=";
     fetchSubmodules = true;
   };
 
