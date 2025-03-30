@@ -22,7 +22,6 @@ jobs:
           push-to-fork: dldt-bot/anari-nix
           base: "main"
           labels: "packages-version"
-          draft: true
           delete-branch: true
           sign-commits: true
           title: "Update packages to latest version"
