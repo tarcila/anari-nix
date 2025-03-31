@@ -14,6 +14,7 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
       - run: nix flake update --accept-flake-config
       - uses: peter-evans/create-pull-request@v7
+        id: cpr
         with:
           token: ${{ secrets.DLDT_BOT_PAT }}
           author: "dldt bot <203830002+dldt-bot@users.noreply.github.com>"
@@ -26,3 +27,7 @@ jobs:
           body: "This PR updates the flake.lock file."
           branch: "update-flake-lock"
           commit-message: "Update flake.lock"
+      - name: Enable Pull Request Automerge
+        run: gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --auto
+        env:
+          GH_TOKEN: ${{ secrets.DLDT_BOT_PAT }}
