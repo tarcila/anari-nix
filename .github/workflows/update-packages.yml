@@ -16,6 +16,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: peter-evans/create-pull-request@v7
+        id: cpr
         with:
           token: ${{ secrets.DLDT_BOT_PAT }}
           author: "dldt bot <203830002+dldt-bot@users.noreply.github.com>"
@@ -28,3 +29,7 @@ jobs:
           body: "This PR updates packages to latest version."
           branch: "update-packages"
           commit-message: "Update packages to latest version"
+      - name: Enable Pull Request Automerge
+        run: gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --auto
+        env:
+          GH_TOKEN: ${{ secrets.DLDT_BOT_PAT }}
