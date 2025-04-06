@@ -29,13 +29,6 @@ stdenv.mkDerivation {
 
   pname = "nanovdb-tools";
 
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/AcademySoftwareFoundation/openvdb/commit/930c3acb8e0c7c2f1373f3a70dc197f5d04dfe74.diff";
-      hash = "sha256-EjwSw1GZ6WgTlA4GNzOfaB/9jOGJkGBQ/5V6lOEoji8=";
-    })
-  ];
-
   nativeBuildInputs =
     [
       cmake
