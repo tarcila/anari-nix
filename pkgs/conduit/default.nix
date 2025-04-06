@@ -6,13 +6,13 @@
 }:
 let
   # Main source.
-  version = "v0.9.3";
+  version = "v0.9.4";
   conduit-src = fetchFromGitHub {
     owner = "llnl";
     repo = "conduit";
     rev = version;
     fetchSubmodules = true;
-    hash = "sha256-R7DiMwaMG9VfqDJiO3kFPb76j6P2GZl/6qLxDfVex8A=";
+    hash = "sha256-xs/9hsE1DLCegXp3CHSl6qpC4ap+niNAWX5lNlUxz9E=";
   };
 in
 stdenv.mkDerivation {

@@ -16,25 +16,18 @@
 }:
 let
   # Main source.
-  version = "v12.0.0";
+  version = "v12.0.1";
   src = fetchFromGitHub {
     owner = "AcademySoftwareFoundation";
     repo = "openvdb";
     rev = version;
-    hash = "sha256-S2uvzDCrTxAmvUMJr5PChcYTqhIHvRZbOfQLtUvzypI=";
+    hash = "sha256-ofVhwULBDzjA+bfhkW12tgTMnFB/Mku2P2jDm74rutY=";
   };
 in
 stdenv.mkDerivation {
   inherit src version;
 
   pname = "nanovdb-tools";
-
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/AcademySoftwareFoundation/openvdb/commit/930c3acb8e0c7c2f1373f3a70dc197f5d04dfe74.diff";
-      hash = "sha256-EjwSw1GZ6WgTlA4GNzOfaB/9jOGJkGBQ/5V6lOEoji8=";
-    })
-  ];
 
   nativeBuildInputs =
     [
