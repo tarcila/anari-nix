@@ -6,19 +6,6 @@ self: pkgs:
     ];
   });
 
-  openimagedenoise =
-    let
-      version = "2.3.2";
-    in
-    pkgs.openimagedenoise.overrideAttrs (old: {
-      version = version;
-      postPatch = null;
-      src = pkgs.fetchzip {
-        url = "https://github.com/OpenImageDenoise/oidn/releases/download/v${version}/oidn-${version}.src.tar.gz";
-        hash = "sha256-yTa6U/1idfidbfNTQ7mXcroe7M4eM7Frxi45A/7e2A8="; # "sha256-cqrla+UjwLg01yzN10hTl+C1NC2UvAjdP4/92Rf0dE4=";
-      };
-    });
-
   openvdb =
     let
       patch = pkgs.fetchpatch {
