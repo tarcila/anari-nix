@@ -13,14 +13,14 @@ let
   src = fetchFromGitHub {
     owner = "pyCGNS";
     repo = "pyCGNS";
-    rev = "68331a1cbfd9463e906b169af5b74dbbace19ed9";
-    hash = "sha256-ZqNkQo8Ml72yr37frfPrSOVsW83TDQpW5sYPw3grgbU=";
+    rev = "4326faf2c4fc03c4fc23c55629013c275fd5042b";
+    hash = "sha256-3GSTffTIcu7o5t18UIHyjXahC5Rj9z6bUQG8aNRenDA=";
   };
 
 in
 stdenv.mkDerivation {
   pname = "pycgns";
-  version = "v6.3.1";
+  version = "v6.3.2";
 
   inherit src;
 
