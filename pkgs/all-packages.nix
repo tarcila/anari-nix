@@ -3,6 +3,7 @@ let
   inherit (pkgs) callPackage;
 in
 {
+  anari-cycles = callPackage ./anari-cycles { inherit (self) anari-sdk; };
   anari-ospray = callPackage ./anari-ospray {
     inherit (self)
       anari-sdk
