@@ -7,23 +7,30 @@
   cudaSupport ? config.cudaSupport,
   cudaPackages_12_6,
   anari-sdk,
+  libjpeg,
+  libpng,
+  libtiff,
   python3,
-  visionaray,
+  openimageio,
+  openvdb,
+  openexr,
+  openjpeg,
+  tbb_2022_0,
+  pugixml,
+  zlib,
 }:
 stdenv.mkDerivation {
-  pname = "anari-visionaray";
-  version = "v0.0.0-610-ga4bef0f";
+  pname = "anari-cycles";
+  version = "v0.0.0-20-g8b4ee2e";
 
   # Main source.
   src = fetchFromGitHub {
-    owner = "szellmann";
-    repo = "anari-visionaray";
-    rev = "a4bef0f36cc680d620edbcc59f188a5dc492ba83";
-    hash = "sha256-fyvi0H0Mj4SZpnvabde1zBrcnldkax/VBDdupmvIBbo=";
+    owner = "jeffamstutz";
+    repo = "anari-cycles";
+    rev = "8b4ee2e17bc3d0b66c9a5d46ac93bee34c8fc7d2";
+    hash = "sha256-KcfvGGJqJWSIrR/kqZQS5gw/OcMaXYTLa7LaqJ3NaWg=";
     fetchSubmodules = true;
   };
-
-  patches = [ ./0001-Build-workaround.patch ];
 
   nativeBuildInputs =
     [
@@ -37,7 +44,16 @@ stdenv.mkDerivation {
   buildInputs =
     [
       anari-sdk
-      visionaray
+      libjpeg
+      openimageio
+      openjpeg
+      pugixml
+      libtiff
+      openexr
+      openvdb
+      libpng
+      zlib
+      tbb_2022_0
     ]
     ++ lib.optionals cudaSupport [
       # CUDA and OptiX
@@ -46,14 +62,15 @@ stdenv.mkDerivation {
     ];
 
   cmakeFlags = [
-    "-DANARI_VISIONARAY_ENABLE_CUDA=${if cudaSupport then "ON" else "OFF"}"
-    "-DANARI_VISIONARAY_ENABLE_NANOVDB=ON"
+    "-DWITH_CYCLES_DEVICE_CUDA=${if cudaSupport then "ON" else "OFF"}"
+    "-DWITH_CYCLES_DEVICE_OPTIX=ON"
+    "-DWITH_CYCLES_NANOVDB=ON"
   ];
 
   meta = with lib; {
     description = "A C++ based, cross platform ray tracing library, exposed through ANARI.";
     homepage = "https://github.com/szellmann/anari-visionaray";
     license = licenses.bsd3;
-    platforms = platforms.unix;
+    platforms = platforms.linux;
   };
 }
