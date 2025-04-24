@@ -23,6 +23,8 @@ stdenv.mkDerivation {
     fetchSubmodules = true;
   };
 
+  patches = [ ./0001-Build-workaround.patch ];
+
   nativeBuildInputs =
     [
       cmake
