@@ -5,17 +5,6 @@ self: pkgs:
       "-DEMBREE_ISPC_SUPPORT=ON"
     ];
   });
-
-  openvdb =
-    let
-      patch = pkgs.fetchpatch {
-        url = "https://github.com/AcademySoftwareFoundation/openvdb/commit/930c3acb8e0c7c2f1373f3a70dc197f5d04dfe74.diff";
-        hash = "sha256-EjwSw1GZ6WgTlA4GNzOfaB/9jOGJkGBQ/5V6lOEoji8=";
-      };
-    in
-    pkgs.openvdb.overrideAttrs (old: {
-      patches = [ patch ] ++ pkgs.lib.optionals (old ? "patches") old.patches;
-    });
 }
 # Handle CUDA CMake implicit directory fix.
 // (
