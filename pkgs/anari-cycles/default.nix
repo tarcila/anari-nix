@@ -71,6 +71,6 @@ stdenv.mkDerivation {
     description = "A C++ based, cross platform ray tracing library, exposed through ANARI.";
     homepage = "https://github.com/szellmann/anari-visionaray";
     license = licenses.bsd3;
-    platforms = platforms.unix;
+    platforms = platforms.linux;
   };
 }
