@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from enum import Enum
 from functools import reduce
 from github import Auth, Github, GithubException
 from itertools import islice, dropwhile
@@ -62,6 +63,26 @@ if type(packages) is not dict:
 auth = (tk := os.environ.get("GITHUB_TOKEN")) and Auth.Token(tk) or None
 
 updatedfiles = []
+
+nixversionstr = subprocess.run(
+    ["nix", "--version"], check=True, stdout=subprocess.PIPE
+).stdout.decode()
+
+
+class NixFlavor(Enum):
+    UNKNOWN = -1
+    CPP_NIX = 1
+    LIX = 2
+
+
+nixflavor = NixFlavor.UNKNOWN
+
+if "(Lix, like Nix)" in nixversionstr:
+    nixflavor = NixFlavor.LIX
+elif "(Nix)" in nixversionstr:
+    nixflavor = NixFlavor.CPP_NIX
+else:
+    raise RuntimeError("Cannot detect the version of nix being used.")
 
 with Github(auth=auth) as g:
     for name, desc in packages.items():
@@ -181,25 +202,39 @@ with Github(auth=auth) as g:
                         print("  Failed fetching from url {cururl}: ", result.stderr)
                         continue
                     newsha256 = result.stdout.decode().strip()
-                    result = subprocess.run(
-                        [
-                            "nix",
-                            "hash",
-                            "convert",
-                            "--hash-algo",
-                            "sha256",
-                            "--to",
-                            "sri",
-                            newsha256,
-                        ],
-                        check=False,
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE,
-                    )
+                    if nixflavor == NixFlavor.CPP_NIX:
+                        result = subprocess.run(
+                            [
+                                "nix",
+                                "hash",
+                                "convert",
+                                "--hash-algo",
+                                "sha256",
+                                "--to",
+                                "sri",
+                            ],
+                            check=False,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                        )
+                    elif nixflavor == NixFlavor.LIX:
+                        result = subprocess.run(
+                            [
+                                "nix",
+                                "hash",
+                                "to-sri",
+                                "--type",
+                                "sha256",
+                                newsha256,
+                            ],
+                            check=False,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                        )
                     if result.returncode != 0:
                         print(
                             "  Failed converting hash {newsha256} to sri: ",
-                            result.stderr,
+                            result.stderr.decode(),
                         )
                         continue
                     newhash = result.stdout.decode().strip()
