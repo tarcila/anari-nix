@@ -2,6 +2,7 @@
   lib,
   stdenv,
   fetchFromGitHub,
+  fetchpatch,
   cmake,
   config,
   cudaSupport ? config.cudaSupport,
@@ -23,7 +24,12 @@ stdenv.mkDerivation {
     fetchSubmodules = true;
   };
 
-  patches = [ ./0001-Build-workaround.patch ];
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/szellmann/anari-visionaray/commit/089e9d2e480a20a3fc03f42213156a6cc0f9c396.patch";
+      hash = "sha256-DQlRxEUkQxO+vuT829TfYH6gsBkmNstTiqjb8T8rKC0=";
+    })
+  ];
 
   nativeBuildInputs =
     [
