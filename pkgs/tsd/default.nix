@@ -22,8 +22,8 @@ let
   visrtx-src = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "VisRTX";
-    rev = "b9d317b6fef3f02033d620fec44aa634dbb291a4";
-    hash = "sha256-tTkGNd1y/gWdrT2WPsyo+H5VmPbA2gP61UMV4hMi0s4=";
+    rev = "b0cad389fd9ee2c6af591c1885551f4db5921553";
+    hash = "sha256-LOPZ/JlLyohMuZ/f6hiJILSF0NWBwMoyJSSpYKs/iaY=";
   };
   anari_viewer_imgui_glfw = fetchurl {
     url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.0-docking.zip";
@@ -37,7 +37,7 @@ let
 in
 stdenv.mkDerivation {
   pname = "tsd";
-  version = "v0.11.0-12-gb9d317b";
+  version = "v0.11.0-18-gb0cad38";
 
   # Main source. Hosted as part of VisRTX.
   src = visrtx-src // {
