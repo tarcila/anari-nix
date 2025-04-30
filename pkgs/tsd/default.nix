@@ -88,7 +88,7 @@ stdenv.mkDerivation {
       hdf5
       tbb_2021_11
     ]
-    ++ lib.optional cudaSupport [
+    ++ lib.optionals cudaSupport [
       cudaPackages.cuda_cudart
       cudaPackages.cuda_cccl
     ];
