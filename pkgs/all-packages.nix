@@ -5,11 +5,11 @@ in
 {
   anari-barney = callPackage ./anari-barney {
     inherit (self) anari-sdk barney;
-    nvidia-optix = self.nvidia-optix7;
+    nvidia-optix = self.nvidia-optix8;
   };
   anari-cycles = callPackage ./anari-cycles {
     inherit (self) anari-sdk;
-    nvidia-optix = self.nvidia-optix7;
+    nvidia-optix = self.nvidia-optix8;
   };
   anari-ospray = callPackage ./anari-ospray {
     inherit (self)
@@ -21,7 +21,7 @@ in
   };
   anari-sdk = callPackage ./anari-sdk { inherit (self) webpconfig_cmake tinygltf; };
   anari-visionaray = callPackage ./anari-visionaray { inherit (self) anari-sdk visionaray; };
-  barney = callPackage ./barney { nvidia-optix = self.nvidia-optix7; };
+  barney = callPackage ./barney { nvidia-optix = self.nvidia-optix8; };
   cgns = callPackage ./cgns { };
   conduit = callPackage ./conduit { };
   hdanari = callPackage ./hdanari { inherit (self) anari-sdk; };
@@ -43,7 +43,7 @@ in
   visionaray = callPackage ./visionaray { };
   visrtx = callPackage ./visrtx {
     inherit (self) anari-sdk nvidia-mdl;
-    nvidia-optix = self.nvidia-optix7;
+    nvidia-optix = self.nvidia-optix8;
   };
   webpconfig_cmake = callPackage ./webpconfig_cmake { };
 }
