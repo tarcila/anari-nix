@@ -2,6 +2,7 @@
   lib,
   stdenv,
   fetchFromGitHub,
+  apple-sdk_13,
   cmake,
   config,
   cudaSupport ? config.cudaSupport,
@@ -19,6 +20,7 @@
   osl,
   openexr,
   openjpeg,
+  sse2neon,
   tbb_2021_11,
   pugixml,
   zlib,
@@ -40,6 +42,7 @@ stdenv.mkDerivation {
   patches = [
     ./0001-Link-with-openvdb-when-needed.patch
     ./0002-Hardcode-Cycles-root-folder-to-CMAKE_INSTALL_PREFIX.patch
+    ./0003-Link-with-IOKit-on-when-building-Metal.patch
   ];
 
   nativeBuildInputs =
@@ -66,6 +69,10 @@ stdenv.mkDerivation {
       zlib
       tbb_2021_11
     ]
+    ++ lib.optionals stdenv.isDarwin [
+      apple-sdk_13
+      sse2neon
+    ]
     ++ lib.optionals (cudaSupport) [
       # CUDA and OptiX
       cudaPackages.cuda_cudart
@@ -82,6 +89,10 @@ stdenv.mkDerivation {
       "-DWITH_CYCLES_NANOVDB=ON"
       "-DWITH_CYCLES_OPENVDB=ON"
       "-DWITH_CYCLES_OSL=ON"
+    ]
+    ++ lib.optionals stdenv.isDarwin [
+      "-DWITH_CYCLES_DEVICE_METAL=ON"
+      "-DSSE2NEON_INCLUDE_DIR=${lib.getDev sse2neon}/lib"
     ]
     ++ lib.optionals cudaSupport [
       "-DWITH_CYCLES_DEVICE_CUDA=ON"
@@ -103,6 +114,6 @@ stdenv.mkDerivation {
     description = "Blender Cycles, exposed through ANARI.";
     homepage = "https://github.com/jeffamstutz/anari-cycles";
     license = licenses.bsd3;
-    platforms = platforms.linux;
+    platforms = platforms.unix;
   };
 }
