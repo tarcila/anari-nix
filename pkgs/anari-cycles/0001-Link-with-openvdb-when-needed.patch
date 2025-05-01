@@ -1,0 +1,29 @@
+From fc465102b1ed10019b23d28c57136dade84e3735 Mon Sep 17 00:00:00 2001
+From: Thomas Arcila <134677+tarcila@users.noreply.github.com>
+Date: Wed, 30 Apr 2025 21:06:35 -0400
+Subject: [PATCH] Link with openvdb when needed
+
+---
+ device/CMakeLists.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/device/CMakeLists.txt b/device/CMakeLists.txt
+index c45d12f..1235b7f 100644
+--- a/device/CMakeLists.txt
++++ b/device/CMakeLists.txt
+@@ -72,6 +72,12 @@ PRIVATE
+   extern_sky
+   OpenImageIO::OpenImageIO
+ )
++if(WITH_CYCLES_NANOVDB)
++  target_link_libraries(${PROJECT_NAME}
++  PRIVATE
++    openvdb
++  )
++endif()
+ 
+ ## ANARI query code generation ##
+ 
+-- 
+2.49.0
+

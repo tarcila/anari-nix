@@ -6,7 +6,7 @@
   config,
   cudaSupport ? config.cudaSupport,
   optixSupport ? config.cudaSupport,
-  cudaPackages_12_6,
+  cudaPackages,
   nvidia-optix,
   anari-sdk,
   libjpeg,
@@ -16,9 +16,10 @@
   python3,
   openimageio,
   openvdb,
+  osl,
   openexr,
   openjpeg,
-  tbb_2022_0,
+  tbb_2021_11,
   pugixml,
   zlib,
 }:
@@ -28,7 +29,6 @@ stdenv.mkDerivation {
   pname = "anari-cycles";
   version = "v0.0.0-20-g8b4ee2e";
 
-  # Main source.
   src = fetchFromGitHub {
     owner = "jeffamstutz";
     repo = "anari-cycles";
@@ -37,13 +37,18 @@ stdenv.mkDerivation {
     fetchSubmodules = true;
   };
 
+  patches = [
+    ./0001-Link-with-openvdb-when-needed.patch
+    ./0002-Hardcode-Cycles-root-folder-to-CMAKE_INSTALL_PREFIX.patch
+  ];
+
   nativeBuildInputs =
     [
       cmake
       python3
     ]
     ++ lib.optionals cudaSupport [
-      cudaPackages_12_6.cuda_nvcc
+      cudaPackages.cuda_nvcc
     ];
 
   buildInputs =
@@ -52,18 +57,19 @@ stdenv.mkDerivation {
       libjpeg
       openimageio
       openjpeg
+      osl
       pugixml
       libtiff
       openexr
       openvdb
       libpng
       zlib
-      tbb_2022_0
+      tbb_2021_11
     ]
     ++ lib.optionals (cudaSupport) [
       # CUDA and OptiX
-      cudaPackages_12_6.cuda_cudart
-      cudaPackages_12_6.cuda_cccl
+      cudaPackages.cuda_cudart
+      cudaPackages.cuda_cccl
       libGL
     ]
     ++ lib.optionals optixSupport [
@@ -74,6 +80,8 @@ stdenv.mkDerivation {
     [
       "-DWITH_CYCLES_DEVICE_HIP=OFF"
       "-DWITH_CYCLES_NANOVDB=ON"
+      "-DWITH_CYCLES_OPENVDB=ON"
+      "-DWITH_CYCLES_OSL=ON"
     ]
     ++ lib.optionals cudaSupport [
       "-DWITH_CYCLES_DEVICE_CUDA=ON"
@@ -85,9 +93,15 @@ stdenv.mkDerivation {
       "-DCYCLES_RUNTIME_OPTIX_ROOT_DIR=${nvidia-optix}"
     ];
 
+  postInstall = ''
+    cmake --build cycles --target install
+    rm -fr ''${out}/cycles
+    rm -fr ''${out}/license
+  '';
+
   meta = with lib; {
-    description = "A C++ based, cross platform ray tracing library, exposed through ANARI.";
-    homepage = "https://github.com/szellmann/anari-visionaray";
+    description = "Blender Cycles, exposed through ANARI.";
+    homepage = "https://github.com/jeffamstutz/anari-cycles";
     license = licenses.bsd3;
     platforms = platforms.linux;
   };
