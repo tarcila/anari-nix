@@ -2,7 +2,6 @@
   lib,
   stdenv,
   fetchFromGitHub,
-  fetchpatch,
   cmake,
   config,
   cudaSupport ? config.cudaSupport,
@@ -13,23 +12,16 @@
 }:
 stdenv.mkDerivation {
   pname = "anari-visionaray";
-  version = "v0.0.0-610-ga4bef0f";
+  version = "v0.0.0-613-gea7d10e";
 
   # Main source.
   src = fetchFromGitHub {
     owner = "szellmann";
     repo = "anari-visionaray";
-    rev = "a4bef0f36cc680d620edbcc59f188a5dc492ba83";
-    hash = "sha256-fyvi0H0Mj4SZpnvabde1zBrcnldkax/VBDdupmvIBbo=";
+    rev = "ea7d10e795cd0f2d65f15ded575c8b3614d36e64";
+    hash = "sha256-Ov/uHoiQLq9dW4pP4VvanhFhJPzqAhvMk5se5rtJhN4=";
     fetchSubmodules = true;
   };
-
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/szellmann/anari-visionaray/commit/089e9d2e480a20a3fc03f42213156a6cc0f9c396.patch";
-      hash = "sha256-DQlRxEUkQxO+vuT829TfYH6gsBkmNstTiqjb8T8rKC0=";
-    })
-  ];
 
   nativeBuildInputs =
     [

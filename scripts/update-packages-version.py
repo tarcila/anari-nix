@@ -73,6 +73,7 @@ class NixFlavor(Enum):
     UNKNOWN = -1
     CPP_NIX = 1
     LIX = 2
+    DETERMINATE = 3
 
 
 nixflavor = NixFlavor.UNKNOWN
@@ -81,6 +82,8 @@ if "(Lix, like Nix)" in nixversionstr:
     nixflavor = NixFlavor.LIX
 elif "(Nix)" in nixversionstr:
     nixflavor = NixFlavor.CPP_NIX
+elif "(Determinate Nix" in nixversionstr:
+    nixflavor = NixFlavor.DETERMINATE
 else:
     raise RuntimeError("Cannot detect the version of nix being used.")
 
@@ -202,7 +205,10 @@ with Github(auth=auth) as g:
                         print("  Failed fetching from url {cururl}: ", result.stderr)
                         continue
                     newsha256 = result.stdout.decode().strip()
-                    if nixflavor == NixFlavor.CPP_NIX:
+                    if (
+                        nixflavor == NixFlavor.CPP_NIX
+                        or nixflavor == NixFlavor.DETERMINATE
+                    ):
                         result = subprocess.run(
                             [
                                 "nix",
@@ -212,6 +218,7 @@ with Github(auth=auth) as g:
                                 "sha256",
                                 "--to",
                                 "sri",
+                                newsha256,
                             ],
                             check=False,
                             stdout=subprocess.PIPE,

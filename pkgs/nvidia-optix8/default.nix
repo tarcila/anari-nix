@@ -8,7 +8,7 @@ let
   src = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "optix-dev";
-    rev = version;
+    tag = version;
     hash = "sha256-qNhN1N0hIPoihrFVzolo2047FomLtqyHFUQh5qW3O5o=";
   };
 
