@@ -212,6 +212,7 @@ with Github(auth=auth) as g:
                                 "sha256",
                                 "--to",
                                 "sri",
+                                newsha256,
                             ],
                             check=False,
                             stdout=subprocess.PIPE,
