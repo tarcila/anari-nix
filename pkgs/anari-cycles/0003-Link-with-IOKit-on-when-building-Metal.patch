@@ -1,0 +1,26 @@
+From 11dd0b6b432f1dc75a7bbd111b64cdd7cd1a9e0a Mon Sep 17 00:00:00 2001
+From: Thomas Arcila <134677+tarcila@users.noreply.github.com>
+Date: Thu, 1 May 2025 14:34:04 -0400
+Subject: [PATCH 3/3] Missing framworks on when building Metal
+
+---
+ cycles/src/device/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/cycles/src/device/CMakeLists.txt b/cycles/src/device/CMakeLists.txt
+index 431ae7a80..5e3789b7c 100644
+--- a/cycles/src/device/CMakeLists.txt
++++ b/cycles/src/device/CMakeLists.txt
+@@ -163,6 +163,9 @@ endif()
+ if(WITH_CYCLES_DEVICE_METAL)
+   list(APPEND LIB
+     ${METAL_LIBRARY}
++    "-framework CoreFoundation"
++    "-framework Foundation"
++    "-framework IOKit"
+   )
+   list(APPEND SRC
+     ${SRC_METAL}
+-- 
+2.49.0
+
