@@ -27,12 +27,11 @@ diff --git a/src/util/path.cpp b/src/util/path.cpp
 index 33cf0a39e..58a08781d 100644
 --- a/cycles/src/util/path.cpp
 +++ b/cycles/src/util/path.cpp
-@@ -292,9 +292,15 @@ static char *path_specials(const string &sub)
+@@ -292,9 +292,14 @@ static char *path_specials(const string &sub)
    static char *env_shader_path;
    static char *env_source_path;
    if (!env_init) {
 +#ifdef CMAKE_INSTALL_PREFIX
-+#warning USING CMAKE_INSTALL_PREFIX AS ROOT
 +    env_shader_path = CMAKE_INSTALL_PREFIX "/shader";
 +    env_source_path = CMAKE_INSTALL_PREFIX "/source";
 +#else
