@@ -17,7 +17,6 @@
   python3,
   openimageio,
   openvdb,
-  osl,
   openexr,
   openjpeg,
   sse2neon,
@@ -43,6 +42,7 @@ stdenv.mkDerivation {
     ./0001-Link-with-openvdb-when-needed.patch
     ./0002-Hardcode-Cycles-root-folder-to-CMAKE_INSTALL_PREFIX.patch
     ./0003-Link-with-IOKit-on-when-building-Metal.patch
+    ./0004-Fix-compilation-using-TypeFloat-and-other-TypeDescs.patch
   ];
 
   nativeBuildInputs =
@@ -60,7 +60,6 @@ stdenv.mkDerivation {
       libjpeg
       openimageio
       openjpeg
-      osl
       pugixml
       libtiff
       openexr
@@ -88,7 +87,6 @@ stdenv.mkDerivation {
       "-DWITH_CYCLES_DEVICE_HIP=OFF"
       "-DWITH_CYCLES_NANOVDB=ON"
       "-DWITH_CYCLES_OPENVDB=ON"
-      "-DWITH_CYCLES_OSL=ON"
     ]
     ++ lib.optionals stdenv.isDarwin [
       "-DWITH_CYCLES_DEVICE_METAL=ON"
