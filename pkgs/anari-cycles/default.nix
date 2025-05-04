@@ -74,7 +74,7 @@ stdenv.mkDerivation {
       apple-sdk_13
       sse2neon
     ]
-    ++ lib.optionals (cudaSupport) [
+    ++ lib.optionals cudaSupport [
       # CUDA and OptiX
       cudaPackages.cuda_cudart
       cudaPackages.cuda_cccl
