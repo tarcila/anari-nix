@@ -15,10 +15,11 @@
   libtiff,
   libGL,
   python3,
-  openimageio,
+  openimageio_2,
   openvdb,
   openexr,
   openjpeg,
+  osl,
   sse2neon,
   tbb_2021_11,
   pugixml,
@@ -58,12 +59,13 @@ stdenv.mkDerivation {
     [
       anari-sdk
       libjpeg
-      openimageio
+      openimageio_2
       openjpeg
       pugixml
       libtiff
       openexr
       openvdb
+      osl
       libpng
       zlib
       tbb_2021_11
@@ -87,6 +89,7 @@ stdenv.mkDerivation {
       "-DWITH_CYCLES_DEVICE_HIP=OFF"
       "-DWITH_CYCLES_NANOVDB=ON"
       "-DWITH_CYCLES_OPENVDB=ON"
+      "-DWITH_CYCLES_OSL=ON"
     ]
     ++ lib.optionals stdenv.isDarwin [
       "-DWITH_CYCLES_DEVICE_METAL=ON"
