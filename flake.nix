@@ -60,6 +60,15 @@
         {
           default = final: prev: overlay final prev;
         };
+
+      templates = {
+        simple = {
+          description = "A basic template enabling supported anari devices and TSD to enable exploration";
+          path = ./templates/simple;
+        };
+      };
+
+      defaultTemplate = self.templates.simple;
     }
     // forEachDefaultSystems (
       system:
