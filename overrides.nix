@@ -14,7 +14,7 @@ self: pkgs:
       cudaPackages.overrideScope (
         self: super:
         let
-          cc = super.backendStdenv.cc;
+          inherit (super.backendStdenv) cc;
           update-what = if super ? "cuda_nvcc" then "cuda_nvcc" else "cudatoolkit";
           setupHook = pkgs.makeSetupHook {
             name = "cmake-filter-implicit-paths-hook";

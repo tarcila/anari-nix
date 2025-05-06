@@ -7,6 +7,7 @@ from itertools import islice, dropwhile
 from pygit2 import clone_repository, discover_repository, GIT_DESCRIBE_TAGS, Repository
 from shutil import rmtree
 from tempfile import mkdtemp
+from pathlib import Path
 
 import json
 import os
@@ -20,10 +21,24 @@ replacerev = re.compile(r'(\s*rev\s*=\s*)"([0-9a-fa-f]+)"')
 replacehash = re.compile(r'(\s*hash\s*=\s*)"([+-=/\w]+)"')
 replaceversion = re.compile(r'(\s*version\s*=\s*)"([-.\w]+)"')
 
+# Script dir
+scriptdir = Path(__file__).resolve().parent
+
 
 def getpackages(url):
+    url = url.rstrip("/")
     result = subprocess.run(
-        ["nix", "eval", f"--accept-flake-config", f"{url}#packagesDetails", "--json"],
+        [
+            "nix",
+            "eval",
+            "--json",
+            "--arg",
+            "flake-path",
+            url,
+            "--file",
+            str(scriptdir / "get-package-details.nix"),
+            "details",
+        ],
         check=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -38,6 +53,7 @@ def checkrepostatus(repo):
     repostatus = repo.status()
     del repostatus["flake.nix"]
     del repostatus["scripts/update-packages-version.py"]
+    del repostatus["scripts/get-package-details.nix"]
     if len(repostatus) != 0:
         print("Error: There are uncommitted changes")
         changes = iter(repostatus.keys())
@@ -52,9 +68,8 @@ def checkrepostatus(repo):
 nixreporoot = discover_repository(".")
 nixrepo = Repository(nixreporoot)
 nixworkdir = nixrepo.workdir
-nixuri = f"{nixworkdir}?rev={nixrepo.head.resolve().peel(None).id}"
 
-if (packages := getpackages(nixuri)) is None:
+if (packages := getpackages(nixworkdir)) is None:
     sys.exit(1)
 if type(packages) is not dict:
     print("Error: invalid package description.")

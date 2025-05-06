@@ -14,7 +14,7 @@ let
   };
 
   nixgl = import src {
-    pkgs = pkgs;
+    inherit pkgs;
   };
 in
 stdenv.mkDerivation {

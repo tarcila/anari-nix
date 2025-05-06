@@ -11,7 +11,7 @@ let
 in
 stdenv.mkDerivation {
   pname = "tinygltf";
-  version = version;
+  inherit version;
 
   src = fetchFromGitHub {
     owner = "syoyo";
