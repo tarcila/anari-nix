@@ -66,9 +66,9 @@
           description = "A basic template enabling supported anari devices and TSD to enable exploration";
           path = ./templates/simple;
         };
-      };
 
-      defaultTemplate = self.templates.simple;
+        default = self.templates.simple;
+      };
     }
     // forEachDefaultSystems (
       system:
