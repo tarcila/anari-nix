@@ -9,12 +9,12 @@
   libGL,
   glfw3,
   pkg-config,
-  dbus,
   darwin,
   tinygltf,
   libwebp,
   webpconfig_cmake,
   draco,
+  sdl3,
 }:
 let
   # Additional CMAKE FetchContent support. Outputs to ${CMAKE_SOURCE_DIR}/.anari_deps/${FETCH_SOURCE_NAME}
@@ -23,14 +23,9 @@ let
     hash = "sha256-Y9ZOWHlb3fbpxWT2aJVky4WHaU4CXn7HeQdyzIIYs7k=";
   };
 
-  anari_viewer_imgui_glfw = fetchurl {
-    url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.0-docking.zip";
-    hash = "sha256-ZXsiXZn9NM4Qo70NoqcjWTYq5wmndIEaoi7jAIVmAkA=";
-  };
-
-  anari_viewer_nfd = fetchurl {
-    url = "https://github.com/btzy/nativefiledialog-extended/archive/refs/tags/v1.2.1.zip";
-    hash = "sha256-/DWbIS5WARkxuQv0JBBX7d7EUwi7TYuaq037L3DjshE=";
+  anari_viewer_imgui_sdl = fetchurl {
+    url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.7-docking.zip";
+    hash = "sha256-glnDJORdpGuZ8PQ4uBYfeOh0kmCzJmNnI9zHOnSwePQ=";
   };
 in
 stdenv.mkDerivation {
@@ -48,10 +43,8 @@ stdenv.mkDerivation {
   postUnpack = ''
     mkdir -p "''${sourceRoot}/.anari_deps/anari_helide_embree/"
     cp "${anari_helide_embree}" "''${sourceRoot}/.anari_deps/anari_helide_embree/v4.3.3.zip"
-    mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_glfw/"
-    cp "${anari_viewer_imgui_glfw}" "''${sourceRoot}/.anari_deps/anari_viewer_imgui_glfw/v1.91.0-docking.zip"
-    mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_nfd/"
-    cp "${anari_viewer_nfd}" "''${sourceRoot}/.anari_deps/anari_viewer_nfd/v1.2.1.zip"
+    mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/"
+    cp "${anari_viewer_imgui_sdl}" "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/v1.91.7-docking.zip"
   '';
 
   postInstall =
@@ -83,13 +76,12 @@ stdenv.mkDerivation {
     ];
   buildInputs =
     [
-      glfw3
+      sdl3
       tinygltf
       libwebp
     ]
     ++ lib.optionals stdenv.hostPlatform.isLinux [
       libGL
-      dbus
     ]
     ++ lib.optionals stdenv.hostPlatform.isDarwin (
       with darwin.apple_sdk.frameworks;
@@ -110,7 +102,6 @@ stdenv.mkDerivation {
     "-DBUILD_TESTING=OFF"
     "-DBUILD_VIEWER=ON"
     "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
-    "-DNFD_PORTAL=ON"
     "-DUSE_DRACO=ON"
     "-DUSE_KTX=OFF"
     "-DUSE_WEBP=ON"

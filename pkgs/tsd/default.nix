@@ -8,15 +8,14 @@
   cmake,
   anari-sdk,
   libGL,
-  glfw3,
   pkg-config,
-  dbus,
   assimp,
   cudaPackages,
   glm,
   hdf5,
   conduit,
   tbb_2021_11,
+  sdl3,
 }:
 let
   visrtx-src = fetchFromGitHub {
@@ -25,14 +24,9 @@ let
     rev = "59199c4a852a96249d091658174342005d68bc2e";
     hash = "sha256-z3lbewuxVglRf7g0viZefjqBA+xP94k/pk2ABgB5wJw=";
   };
-  anari_viewer_imgui_glfw = fetchurl {
-    url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.0-docking.zip";
-    hash = "sha256-ZXsiXZn9NM4Qo70NoqcjWTYq5wmndIEaoi7jAIVmAkA=";
-  };
-
-  anari_viewer_nfd = fetchurl {
-    url = "https://github.com/btzy/nativefiledialog-extended/archive/refs/tags/v1.2.1.zip";
-    hash = "sha256-/DWbIS5WARkxuQv0JBBX7d7EUwi7TYuaq037L3DjshE=";
+  anari_viewer_imgui_sdl = fetchurl {
+    url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.7-docking.zip";
+    hash = "sha256-glnDJORdpGuZ8PQ4uBYfeOh0kmCzJmNnI9zHOnSwePQ=";
   };
 in
 stdenv.mkDerivation {
@@ -45,18 +39,16 @@ stdenv.mkDerivation {
   };
 
   postUnpack = ''
-    mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_glfw/"
-    cp "${anari_viewer_imgui_glfw}" "''${sourceRoot}/.anari_deps/anari_viewer_imgui_glfw/v1.91.0-docking.zip"
-    mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_nfd/"
-    cp "${anari_viewer_nfd}" "''${sourceRoot}/.anari_deps/anari_viewer_nfd/v1.2.1.zip"
+    mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/"
+    cp "${anari_viewer_imgui_sdl}" "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/v1.91.7-docking.zip"
   '';
 
   cmakeFlags = [
-    "-DNFD_PORTAL=ON"
     "-DTSD_ENABLE_SERIALIZATION=ON"
     "-DTSD_USE_CUDA=${if cudaSupport then "ON" else "OFF"}"
     "-DTSD_USE_ASSIMP=ON"
     "-DTSD_USE_HDF5=ON"
+    "-DTSD_USE_SDL3=ON"
   ];
 
   installPhase = ''
@@ -81,8 +73,7 @@ stdenv.mkDerivation {
       anari-sdk
       assimp
       conduit
-      dbus
-      glfw3
+      sdl3
       glm
       libGL
       hdf5
