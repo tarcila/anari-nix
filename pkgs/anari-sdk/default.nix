@@ -9,7 +9,7 @@
   libGL,
   glfw3,
   pkg-config,
-  darwin,
+  apple-sdk_11,
   tinygltf,
   libwebp,
   webpconfig_cmake,
@@ -83,13 +83,9 @@ stdenv.mkDerivation {
     ++ lib.optionals stdenv.hostPlatform.isLinux [
       libGL
     ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin (
-      with darwin.apple_sdk.frameworks;
-      [
-        AppKit
-        UniformTypeIdentifiers
-      ]
-    );
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
+      apple-sdk_11
+    ];
 
   propagatedBuildInputs = [
     draco

@@ -1,7 +1,7 @@
 {
   anari-sdk,
   cmake,
-  darwin,
+  apple-sdk_11,
   fetchFromGitHub,
   lib,
   python3,
@@ -50,16 +50,9 @@ stdenv.mkDerivation {
       xorg.libXt
       libGL
     ]
-    ++ lib.optionals stdenv.isDarwin (
-      with darwin.apple_sdk_11_0.frameworks;
-      [
-        AppKit
-        ApplicationServices
-        Cocoa
-        OpenGL
-        Metal
-      ]
-    );
+    ++ lib.optionals stdenv.isDarwin [
+      apple-sdk_11
+    ];
 
   # Special case for OPENUSD_PLUGIN_INSTALL_PREFIX...
   # Ideally we'd like to pass this as a relative path to the installation folder in the cmakeFlags, but this does end up
