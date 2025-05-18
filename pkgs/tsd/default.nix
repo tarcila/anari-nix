@@ -53,10 +53,7 @@ stdenv.mkDerivation {
 
   installPhase = ''
     mkdir -p "''${out}/bin"
-    for target in tsdMaterialExplorer tsdViewer tsdVolumeViewer
-    do
-        cp "''${target}" "''${out}/bin/"
-    done
+    cp ./tsdViewer "''${out}/bin"
   '';
 
   nativeBuildInputs =
