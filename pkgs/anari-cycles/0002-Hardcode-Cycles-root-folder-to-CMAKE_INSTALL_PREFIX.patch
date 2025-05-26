@@ -15,7 +15,7 @@ index fe28dfd66..e1a9d78b1 100644
 @@ -10,6 +10,10 @@ set(INC_SYS
    ${ZSTD_INCLUDE_DIRS}
  )
- 
+
 +set_source_files_properties(
 +  path.cpp
 +  PROPERTIES COMPILE_DEFINITIONS "CMAKE_INSTALL_PREFIX=\"${CMAKE_INSTALL_PREFIX}\""
@@ -42,33 +42,30 @@ index 33cf0a39e..58a08781d 100644
      env_init = true;
    }
    if (env_shader_path != nullptr && sub == "shader") {
-@@ -342,7 +348,12 @@ string path_get(const string &sub)
+@@ -342,7 +348,11 @@ string path_get(const string &sub)
    }
- 
+
    if (cached_path.empty()) {
 +#ifdef CMAKE_INSTALL_PREFIX
-+#warning USING CMAKE_INSTALL_PREFIX AS ROOT
 +    cached_path = CMAKE_INSTALL_PREFIX;
 +#else
      cached_path = path_dirname(OIIO::Sysutil::this_program_path());
 +#endif
    }
- 
+
    return path_join(cached_path, sub);
-@@ -351,7 +362,12 @@ string path_get(const string &sub)
+@@ -351,7 +362,11 @@ string path_get(const string &sub)
  string path_user_get(const string &sub)
  {
    if (cached_user_path.empty()) {
 -    cached_user_path = path_dirname(OIIO::Sysutil::this_program_path());
 +#ifdef CMAKE_INSTALL_PREFIX
-+#warning USING CMAKE_INSTALL_PREFIX AS ROOT
 +        cached_user_path = CMAKE_INSTALL_PREFIX;
 +#else
 +        cached_user_path = path_dirname(OIIO::Sysutil::this_program_path());
 +#endif
    }
- 
-   return path_join(cached_user_path, sub);
--- 
-2.49.0
 
+   return path_join(cached_user_path, sub);
+--
+2.49.0

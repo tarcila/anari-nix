@@ -15,7 +15,7 @@
   libtiff,
   libGL,
   python3,
-  openimageio_2,
+  openimageio,
   openvdb,
   openexr,
   openjpeg,
@@ -40,10 +40,11 @@ stdenv.mkDerivation {
   };
 
   patches = [
-    ./0001-Link-with-openvdb-when-needed.patch
+    ./0001-Link-with-openvdb-and-osl-when-needed.patch
     ./0002-Hardcode-Cycles-root-folder-to-CMAKE_INSTALL_PREFIX.patch
     ./0003-Link-with-IOKit-on-when-building-Metal.patch
     ./0004-Fix-compilation-using-TypeFloat-and-other-TypeDescs.patch
+    ./0005-Do-not-build-cycles-standalone-app.patch
   ];
 
   nativeBuildInputs =
@@ -59,7 +60,7 @@ stdenv.mkDerivation {
     [
       anari-sdk
       libjpeg
-      openimageio_2
+      openimageio
       openjpeg
       pugixml
       libtiff
@@ -98,17 +99,14 @@ stdenv.mkDerivation {
     ++ lib.optionals cudaSupport [
       "-DWITH_CYCLES_DEVICE_CUDA=ON"
       "-DWITH_CUDA_DYNLOAD=OFF"
-      "-DWITH_CYCLES_CUDA_BINARIES=ON"
     ]
     ++ lib.optionals optixSupport [
       "-DWITH_CYCLES_DEVICE_OPTIX=ON"
       "-DCYCLES_RUNTIME_OPTIX_ROOT_DIR=${nvidia-optix}"
     ];
 
-  postInstall = ''
-    cmake --build cycles --target install
-    rm -fr ''${out}/cycles
-    rm -fr ''${out}/license
+  installPhase = ''
+    cmake --build device --target install
   '';
 
   meta = with lib; {

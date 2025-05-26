@@ -1,0 +1,26 @@
+From b462824bafcb86fbb3f47537600d062481e0c529 Mon Sep 17 00:00:00 2001
+From: Thomas Arcila <134677+tarcila@users.noreply.github.com>
+Date: Mon, 26 May 2025 05:04:55 -0400
+Subject: [PATCH] Do not build cycles standalone app
+
+---
+ cycles/src/CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/cycles/src/CMakeLists.txt b/cycles/src/CMakeLists.txt
+index 15cccbf0f..f86bc8467 100644
+--- a/cycles/src/CMakeLists.txt
++++ b/cycles/src/CMakeLists.txt
+@@ -447,7 +447,8 @@ if(WITH_CYCLES_BLENDER)
+   add_subdirectory(blender)
+ endif()
+ 
+-add_subdirectory(app)
++# Do not build Cycles standalone app
++# add_subdirectory(app)
+ add_subdirectory(bvh)
+ add_subdirectory(device)
+ add_subdirectory(doc)
+-- 
+2.49.0
+
