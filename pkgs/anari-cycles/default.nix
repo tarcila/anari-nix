@@ -15,7 +15,7 @@
   libtiff,
   libGL,
   python3,
-  openimageio_2,
+  openimageio,
   openvdb,
   openexr,
   openjpeg,
@@ -60,7 +60,7 @@ stdenv.mkDerivation {
     [
       anari-sdk
       libjpeg
-      openimageio_2
+      openimageio
       openjpeg
       pugixml
       libtiff
