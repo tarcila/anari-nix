@@ -42,12 +42,11 @@ index 33cf0a39e..58a08781d 100644
      env_init = true;
    }
    if (env_shader_path != nullptr && sub == "shader") {
-@@ -342,7 +348,12 @@ string path_get(const string &sub)
+@@ -342,7 +348,11 @@ string path_get(const string &sub)
    }
  
    if (cached_path.empty()) {
 +#ifdef CMAKE_INSTALL_PREFIX
-+#warning USING CMAKE_INSTALL_PREFIX AS ROOT
 +    cached_path = CMAKE_INSTALL_PREFIX;
 +#else
      cached_path = path_dirname(OIIO::Sysutil::this_program_path());
