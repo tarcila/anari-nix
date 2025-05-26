@@ -7,6 +7,7 @@
   python3,
   stdenv,
   openusd,
+  opensubdiv,
   materialx,
   libGL,
   xorg,
@@ -42,6 +43,7 @@ stdenv.mkDerivation {
       anari-sdk
       materialx
       openusd
+      opensubdiv
       tbb
     ]
     ++ lib.optionals stdenv.isLinux [
