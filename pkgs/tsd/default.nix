@@ -16,6 +16,7 @@
   conduit,
   tbb_2021_11,
   sdl3,
+  openusd,
 }:
 let
   visrtx-src = fetchFromGitHub {
@@ -74,6 +75,7 @@ stdenv.mkDerivation {
       glm
       libGL
       hdf5
+      openusd
       tbb_2021_11
     ]
     ++ lib.optionals cudaSupport [
