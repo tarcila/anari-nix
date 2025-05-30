@@ -12,14 +12,14 @@
 }:
 stdenv.mkDerivation {
   pname = "visrtx";
-  version = "v0.11.0-75-ga711f42";
+  version = "v0.11.0-103-g125b301";
 
   # Main source.
   src = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "VisRTX";
-    rev = "a711f4273717996cbbc0bbc4a70a38b40892c83e";
-    hash = "sha256-6GWOmMAzohjww4ng2ZbXpFuI9mKX29eDT5LDHy5Rmos=";
+    rev = "125b301c60c5a5d4b7ad7784e1fcdfdc3599ea9a";
+    hash = "sha256-dFfE5EHyBGVQxE7D4I+Aur+XiihIpAyHF7qWUoqESo0=";
   };
 
   cmakeFlags = [
@@ -52,6 +52,8 @@ stdenv.mkDerivation {
     # CUDA and OptiX
     cudaPackages.cuda_cudart
     cudaPackages.cuda_cccl
+    (lib.getDev cudaPackages.cuda_nvml_dev)
+
     cudaPackages.libcurand
     nvidia-optix
 
