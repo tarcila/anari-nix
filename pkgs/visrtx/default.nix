@@ -52,6 +52,8 @@ stdenv.mkDerivation {
     # CUDA and OptiX
     cudaPackages.cuda_cudart
     cudaPackages.cuda_cccl
+    (lib.getDev cudaPackages.cuda_nvml_dev)
+
     cudaPackages.libcurand
     nvidia-optix
 

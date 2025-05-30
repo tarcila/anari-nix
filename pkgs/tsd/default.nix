@@ -17,6 +17,7 @@
   tbb_2021_11,
   sdl3,
   openusd,
+  xorg,
 }:
 let
   visrtx-src = fetchFromGitHub {
@@ -38,6 +39,8 @@ stdenv.mkDerivation {
   src = visrtx-src // {
     outPath = visrtx-src + "/tsd";
   };
+
+  patches = [ ./0001-Fix-link-with-OpenUSD-monolithic-library.patch ];
 
   postUnpack = ''
     mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/"
@@ -77,6 +80,10 @@ stdenv.mkDerivation {
       hdf5
       openusd
       tbb_2021_11
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
+      xorg.libX11
+      xorg.libXt
     ]
     ++ lib.optionals cudaSupport [
       cudaPackages.cuda_cudart

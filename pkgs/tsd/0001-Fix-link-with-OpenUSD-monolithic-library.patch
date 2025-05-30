@@ -1,0 +1,30 @@
+From 3fde9eb0070a5f38f6ace08fa3edb74ec45b9e24 Mon Sep 17 00:00:00 2001
+From: Thomas Arcila <134677+tarcila@users.noreply.github.com>
+Date: Fri, 30 May 2025 13:38:56 -0400
+Subject: [PATCH] Fix link with OpenUSD monolithic library
+
+---
+ src/tsd/CMakeLists.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/tsd/CMakeLists.txt b/src/tsd/CMakeLists.txt
+index ca679ea..0fc234b 100644
+--- a/src/tsd/CMakeLists.txt
++++ b/src/tsd/CMakeLists.txt
+@@ -138,9 +138,12 @@ else()
+ endif()
+ 
+ if (TSD_USE_USD)
++  # USD might have been linked with those...
++  find_package(OpenGL)
++  find_package(X11)
+   find_package(pxr REQUIRED)
+   project_compile_definitions(PRIVATE -DTSD_USE_USD=1)
+-  project_link_libraries(PRIVATE usd usdGeom tf gf)
++  project_link_libraries(PRIVATE ${PXR_LIBRARIES})
+ else()
+   project_compile_definitions(PRIVATE -DTSD_USE_USD=0)
+ endif()
+-- 
+2.49.0
+
