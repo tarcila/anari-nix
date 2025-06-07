@@ -40,8 +40,6 @@ stdenv.mkDerivation {
     outPath = visrtx-src + "/tsd";
   };
 
-  patches = [ ./0001-Fix-link-with-OpenUSD-monolithic-library.patch ];
-
   postUnpack = ''
     mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/"
     cp "${anari_viewer_imgui_sdl}" "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/v1.91.7-docking.zip"
