@@ -31,6 +31,7 @@ def getpackages(url):
         [
             "nix",
             "eval",
+            "--accept-flake-config",
             "--json",
             "--arg",
             "flake-path",
