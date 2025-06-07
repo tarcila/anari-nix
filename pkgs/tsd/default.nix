@@ -18,13 +18,23 @@
   sdl3,
   openusd,
   xorg,
+  applyPatches,
 }:
 let
-  visrtx-src = fetchFromGitHub {
-    owner = "NVIDIA";
-    repo = "VisRTX";
-    rev = "488ba67d444036c607f154ac96a08e1fc32dfb7c";
-    hash = "sha256-rrcp4gzzZU95W05RmAhdyRXu55nIRt1eJWhaFvGoB4s=";
+  visrtx-src = applyPatches {
+    src = fetchFromGitHub {
+      owner = "NVIDIA";
+      repo = "VisRTX";
+      rev = "488ba67d444036c607f154ac96a08e1fc32dfb7c";
+      hash = "sha256-rrcp4gzzZU95W05RmAhdyRXu55nIRt1eJWhaFvGoB4s=";
+    };
+    postPatch = ''
+      cp -rv ./external/fmtlib ./tsd/external/fmtlib
+      substituteInPlace ./tsd/external/CMakeLists.txt --replace-fail "../../external/fmtlib" "fmtlib"
+    '';
+  };
+  tsd-src = visrtx-src // {
+    outPath = visrtx-src + "/tsd";
   };
   anari_viewer_imgui_sdl = fetchurl {
     url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.7-docking.zip";
@@ -36,9 +46,7 @@ stdenv.mkDerivation {
   version = "v0.11.0-115-g488ba67";
 
   # Main source. Hosted as part of VisRTX.
-  src = visrtx-src // {
-    outPath = visrtx-src + "/tsd";
-  };
+  src = tsd-src;
 
   postUnpack = ''
     mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/"
