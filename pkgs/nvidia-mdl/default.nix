@@ -24,7 +24,6 @@ stdenv.mkDerivation {
   };
 
   patches = [
-    ./fix-missing-cstdint.patch
     ./skip-xlib-workaround-test.patch
   ];
 
