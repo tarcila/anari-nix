@@ -1,6 +1,10 @@
-self: pkgs:
+final: prev:
 let
-  overrides = import ./overrides.nix self pkgs;
-  packages = import ./packages.nix self (pkgs // overrides);
+  inherit (prev) lib;
+  extra = import ./extra.nix { inherit lib; };
+
+  overrides = import ./overrides.nix;
+  packages = import ./packages.nix;
+  aliases = import ./aliases.nix;
 in
-packages // overrides
+extra.applyOverlays [ overrides packages aliases ] final prev

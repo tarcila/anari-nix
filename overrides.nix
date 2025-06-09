@@ -45,5 +45,3 @@ self: pkgs:
     // acc
   ) { } allCudaPackagesNames
 )
-// {
-}

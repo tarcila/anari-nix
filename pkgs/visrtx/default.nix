@@ -6,8 +6,8 @@
   anari-sdk,
   pkg-config,
   cudaPackages,
+  mdl-sdk,
   nvidia-optix,
-  nvidia-mdl,
   python3,
 }:
 stdenv.mkDerivation {
@@ -35,7 +35,7 @@ stdenv.mkDerivation {
   ];
 
   postFixup = ''
-    patchelf --add-rpath ${nvidia-mdl}/lib/ $out/lib/libanari_library_visrtx.so
+    patchelf --add-rpath ${mdl-sdk}/lib/ $out/lib/libanari_library_visrtx.so
   '';
 
   nativeBuildInputs = [
@@ -58,7 +58,7 @@ stdenv.mkDerivation {
     nvidia-optix
 
     # MDL
-    nvidia-mdl
+    mdl-sdk
   ];
 
   meta = with lib; {

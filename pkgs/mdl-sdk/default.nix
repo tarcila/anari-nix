@@ -14,7 +14,7 @@ let
 in
 stdenv.mkDerivation {
   inherit version;
-  pname = "nvidia-mdl";
+  pname = "mdl-sdk";
 
   src = fetchFromGitHub {
     owner = "NVIDIA";
