@@ -26,40 +26,14 @@
     }:
     let
       inherit (nixpkgs) lib;
-
-      # Supported systems
-      defaultSystems = [
-        "aarch64-linux"
-        "x86_64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
-      ];
-
-      # Helper function to generate an attrset '{ x86_64-linux = f "x86_64-linux"; ... }'.
-      forAllSystems = lib.genAttrs defaultSystems;
-
-      # Helper function that turns a attributeset {"packages" = { ...}  ... } returned by (f system)
-      # into {"packages" = { <system> = { ... } }  ... }.
-      forEachSystem =
-        f: systems:
-        let
-          forOneSystem = f: system: builtins.mapAttrs (name: value: { "${system}" = value; }) (f system);
-          merge = acc: set: builtins.mapAttrs (name: value: (acc.${name} or { }) // value) set;
-        in
-        builtins.foldl' merge { } (map (forOneSystem f) systems);
-
-      # Same as above given the default set of default systems.
-      forEachDefaultSystems = f: forEachSystem f defaultSystems;
+      extra = import ./extra.nix { inherit lib; };
+      inherit (extra) flattenOverlays forEachDefaultSystems;
     in
     {
       # Expose our packages as an overlay
-      overlays =
-        let
-          overlay = import ./default.nix;
-        in
-        {
-          default = final: prev: overlay final prev;
-        };
+      overlays = {
+        default = import ./default.nix;
+      };
 
       templates = {
         simple = {
@@ -77,6 +51,7 @@
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          # Make sure we first apply our local overrides
           overlays = [ (import ./overrides.nix) ];
         };
 
@@ -85,11 +60,14 @@
           config.cudaSupport = true;
         });
 
-        # Create our package set, based on a configurable nixpkgs source
-        packagesFor =
-          pkgs:
+        # Create our package set, based on a configurable nixpkgs source and a possible list
+        # overlays
+        packagesForWithOverlays =
+          overlays: pkgs:
           let
-            packages = builtins.removeAttrs (import ./packages.nix self.packages.${system} pkgs) [ "nixglenv" ];
+            packages = builtins.removeAttrs (flattenOverlays overlays self.packages.${system} pkgs) [
+              "nixglenv"
+            ];
           in
           lib.attrsets.filterAttrs (
             packageName: packageDesc:
@@ -99,10 +77,17 @@
             builtins.elem system packagePlatforms
           ) packages;
 
+        overlayPackages = import ./packages.nix;
+        overlayAliases = import ./aliases.nix;
+
+        packagesFor = pkgs: packagesForWithOverlays [ overlayPackages ] pkgs;
+        packagesWithAliasesFor = pkgs: packagesForWithOverlays [ overlayPackages overlayAliases ] pkgs;
+
         # Instanciate our packages both for cuda and non-cuda pkgs.
         # CUDA is not exposed directly, but will be used for checks.
-        packagesDefault = packagesFor pkgs;
-        packagesCuda = packagesFor pkgsCuda;
+        packagesDefault = packagesWithAliasesFor pkgs;
+        packagesCheckDefault = packagesFor pkgs;
+        packagesCheckCuda = packagesFor pkgsCuda;
 
         # CUDA quick introspection
         canDoCuda = system == "x86_64-linux" || system == "aarch64-linux";
@@ -113,10 +98,11 @@
       {
         # Expected flake outputs.
         packages = packagesDefault;
+        packagesCheck = packagesCheckDefault;
         formatter = treefmtEval.config.build.wrapper;
         checks = lib.attrsets.filterAttrs (name: value: lib.attrsets.isDerivation value) {
-          packages = pkgs.linkFarm "packages" packagesDefault;
-          packagesCuda = if canDoCuda then pkgs.linkFarm "packages-cuda" packagesCuda else null;
+          packages = pkgs.linkFarm "packages" packagesCheckDefault;
+          packagesCuda = if canDoCuda then pkgs.linkFarm "packages-cuda" packagesCheckCuda else null;
           format = treefmtEval.config.build.check self;
         };
 
