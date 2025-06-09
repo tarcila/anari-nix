@@ -1,6 +1,6 @@
 self: pkgs:
 let
-  inherit (pkgs) callPackage;
+  inherit (pkgs) callPackage lib;
 in
 {
   anari-barney = callPackage ./anari-barney {
@@ -27,7 +27,7 @@ in
   hdanari = callPackage ./hdanari { inherit (self) anari-sdk; };
   nanovdb-tools = callPackage ./nanovdb-tools { };
   nixglenv = callPackage ./nixglenv { };
-  nvidia-mdl = callPackage ./nvidia-mdl { };
+  mdl-sdk = callPackage ./mdl-sdk { };
   nvidia-optix = callPackage ./nvidia-optix { };
   nvidia-optix7 = callPackage ./nvidia-optix7 { };
   nvidia-optix8 = callPackage ./nvidia-optix8 { };
@@ -41,7 +41,7 @@ in
   visgl = callPackage ./visgl { inherit (self) anari-sdk; };
   visionaray = callPackage ./visionaray { };
   visrtx = callPackage ./visrtx {
-    inherit (self) anari-sdk nvidia-mdl;
+    inherit (self) anari-sdk mdl-sdk;
     nvidia-optix = self.nvidia-optix8;
   };
   webpconfig_cmake = callPackage ./webpconfig_cmake { };
