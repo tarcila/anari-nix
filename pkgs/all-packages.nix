@@ -28,7 +28,6 @@ in
   nanovdb-tools = callPackage ./nanovdb-tools { };
   nixglenv = callPackage ./nixglenv { };
   nvidia-mdl = callPackage ./nvidia-mdl { };
-  nvidia-nrd = callPackage ./nvidia-nrd { };
   nvidia-optix = callPackage ./nvidia-optix { };
   nvidia-optix7 = callPackage ./nvidia-optix7 { };
   nvidia-optix8 = callPackage ./nvidia-optix8 { };

@@ -18,13 +18,23 @@
   sdl3,
   openusd,
   xorg,
+  applyPatches,
 }:
 let
-  visrtx-src = fetchFromGitHub {
-    owner = "NVIDIA";
-    repo = "VisRTX";
-    rev = "125b301c60c5a5d4b7ad7784e1fcdfdc3599ea9a";
-    hash = "sha256-dFfE5EHyBGVQxE7D4I+Aur+XiihIpAyHF7qWUoqESo0=";
+  visrtx-src = applyPatches {
+    src = fetchFromGitHub {
+      owner = "NVIDIA";
+      repo = "VisRTX";
+      rev = "488ba67d444036c607f154ac96a08e1fc32dfb7c";
+      hash = "sha256-rrcp4gzzZU95W05RmAhdyRXu55nIRt1eJWhaFvGoB4s=";
+    };
+    postPatch = ''
+      cp -rv ./external/fmtlib ./tsd/external/fmtlib
+      substituteInPlace ./tsd/external/CMakeLists.txt --replace-fail "../../external/fmtlib" "fmtlib"
+    '';
+  };
+  tsd-src = visrtx-src // {
+    outPath = visrtx-src + "/tsd";
   };
   anari_viewer_imgui_sdl = fetchurl {
     url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.7-docking.zip";
@@ -33,14 +43,10 @@ let
 in
 stdenv.mkDerivation {
   pname = "tsd";
-  version = "v0.11.0-103-g125b301";
+  version = "v0.11.0-115-g488ba67";
 
   # Main source. Hosted as part of VisRTX.
-  src = visrtx-src // {
-    outPath = visrtx-src + "/tsd";
-  };
-
-  patches = [ ./0001-Fix-link-with-OpenUSD-monolithic-library.patch ];
+  src = tsd-src;
 
   postUnpack = ''
     mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/"

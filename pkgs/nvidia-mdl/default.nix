@@ -10,7 +10,7 @@
   openexr,
 }:
 let
-  version = "2024.1.1";
+  version = "2024.1.3";
 in
 stdenv.mkDerivation {
   inherit version;
@@ -20,11 +20,10 @@ stdenv.mkDerivation {
     owner = "NVIDIA";
     repo = "MDL-SDK";
     rev = version;
-    hash = "sha256-cnNWwYEfqfDwqE8zjCkAiW6DjSTAf4cvVq2A8YQLoYE=";
+    hash = "sha256-SoxS+lKxSM0gvfrXwPhRHXCBWFaD+pDv/WX8zojprwY=";
   };
 
   patches = [
-    ./fix-missing-cstdint.patch
     ./skip-xlib-workaround-test.patch
   ];
 
