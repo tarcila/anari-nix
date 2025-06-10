@@ -21,18 +21,23 @@
   applyPatches,
 }:
 let
-  visrtx-src = applyPatches {
-    src = fetchFromGitHub {
+  visrtx-src =
+    let
       owner = "NVIDIA";
       repo = "VisRTX";
-      rev = "488ba67d444036c607f154ac96a08e1fc32dfb7c";
-      hash = "sha256-rrcp4gzzZU95W05RmAhdyRXu55nIRt1eJWhaFvGoB4s=";
+    in
+    applyPatches {
+      inherit owner repo; # Those are not ujsed by applyPatches, but are used by our update script.
+      src = fetchFromGitHub {
+        inherit owner repo;
+        rev = "488ba67d444036c607f154ac96a08e1fc32dfb7c";
+        hash = "sha256-rrcp4gzzZU95W05RmAhdyRXu55nIRt1eJWhaFvGoB4s=";
+      };
+      postPatch = ''
+        cp -rv ./external/fmtlib ./tsd/external/fmtlib
+        substituteInPlace ./tsd/external/CMakeLists.txt --replace-fail "../../external/fmtlib" "fmtlib"
+      '';
     };
-    postPatch = ''
-      cp -rv ./external/fmtlib ./tsd/external/fmtlib
-      substituteInPlace ./tsd/external/CMakeLists.txt --replace-fail "../../external/fmtlib" "fmtlib"
-    '';
-  };
   tsd-src = visrtx-src // {
     outPath = visrtx-src + "/tsd";
   };
