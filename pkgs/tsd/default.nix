@@ -27,15 +27,18 @@ let
       repo = "VisRTX";
     in
     applyPatches {
-      inherit owner repo; # Those are not ujsed by applyPatches, but are used by our update script.
+      inherit owner repo; # Those are not used by applyPatches, but are used by our update script.
       src = fetchFromGitHub {
         inherit owner repo;
-        rev = "dbc193a0ba5765235426290dba9431c53115cacf";
-        hash = "sha256-/hPkQupq0HKbOwBpvKfzOe28OK0vmneC9eFpvE4Quks=";
+        rev = "4b5e9fef22a7310b004c160d4f8dd33b36458fb2";
+        hash = "sha256-oaK0qkePkcvFuWlH2otvaMg/BbkAgRh7wdFlRPpADiU=";
       };
       postPatch = ''
         cp -rv ./external/fmtlib ./tsd/external/fmtlib
-        substituteInPlace ./tsd/external/CMakeLists.txt --replace-fail "../../external/fmtlib" "fmtlib"
+        cp -rv ./external/stb_image ./tsd/external/stb_image
+        substituteInPlace ./tsd/external/CMakeLists.txt \
+          --replace-fail "../../external/fmtlib" "fmtlib" \
+          --replace-fail "../../external/stb_image" "stb_image"
       '';
     };
   tsd-src = visrtx-src // {
@@ -48,7 +51,7 @@ let
 in
 stdenv.mkDerivation {
   pname = "tsd";
-  version = "v0.11.0-118-gdbc193a";
+  version = "v0.11.0-129-g4b5e9fe";
 
   # Main source. Hosted as part of VisRTX.
   src = tsd-src;
