@@ -99,6 +99,7 @@ stdenv.mkDerivation {
     ++ lib.optionals cudaSupport [
       "-DWITH_CYCLES_DEVICE_CUDA=ON"
       "-DWITH_CUDA_DYNLOAD=OFF"
+      "-DWITH_CYCLES_CUDA_BINARIES=ON"
     ]
     ++ lib.optionals optixSupport [
       "-DWITH_CYCLES_DEVICE_OPTIX=ON"
