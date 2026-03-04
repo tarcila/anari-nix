@@ -32,8 +32,6 @@ stdenv.mkDerivation {
     ./0003-Also-skip-gomp-when-flattening-usd-libraries.patch
     ./0004-Also-ignore-static-and-dylib-libraries.patch
     ./0005-Fix-build-on-MacOS.patch
-    ./0006-Fix-non-const-reference-bound-to-temporary-in-GetOrC.patch
-    ./0007-Fix-format-security-warning-in-snprintf-call.patch
   ];
 
   nativeBuildInputs = [
