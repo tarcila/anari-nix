@@ -1,10 +1,10 @@
-final: prev:
+nixpkgs:
 let
-  overlays = prev.lib.composeManyExtensions [
-    (import ./overrides.nix)
-    (import ./packages.nix)
-    (import ./python-packages.nix)
-    (import ./aliases.nix)
-  ];
+  inherit (nixpkgs) lib;
 in
-overlays final prev
+lib.composeManyExtensions [
+  (import ./overrides.nix)
+  (import ./packages.nix lib)
+  (import ./python-packages.nix lib)
+  (import ./aliases.nix lib)
+]
