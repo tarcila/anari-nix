@@ -130,7 +130,7 @@
     {
       packages = forAllDefaultSystems packages;
 
-      overlays.default = import ./overlay.nix;
+      overlays.default = import ./overlay.nix nixpkgs;
 
       checks = forAllDefaultSystems (
         system:
