@@ -130,7 +130,7 @@
     {
       packages = forAllDefaultSystems packages;
 
-      overlays.default = import ./overlay.nix;
+      overlays.default = import ./overlay.nix nixpkgs;
 
       checks = forAllDefaultSystems (
         system:
@@ -157,7 +157,6 @@
           default = mkShell {
             buildInputs = [
               cachix
-              nix
               nix-update
               nix-prefetch-git
               python3Packages.pygit2

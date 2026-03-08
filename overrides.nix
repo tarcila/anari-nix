@@ -14,7 +14,4 @@ _final: prev: {
     };
     doCheck = false;
   });
-
-  # Workaround ucx being broken with cuda
-  ucx = prev.ucx.override { enableCuda = false; };
 }
