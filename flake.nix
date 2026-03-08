@@ -157,7 +157,6 @@
           default = mkShell {
             buildInputs = [
               cachix
-              nix
               nix-update
               nix-prefetch-git
               python3Packages.pygit2
