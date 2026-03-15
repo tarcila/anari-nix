@@ -49,9 +49,6 @@ stdenv.mkDerivation {
     hash = "sha256-uGiDHnFjx91khvssz3FDp2Hs0hQeRk9OpKNNGAUmP04=";
   };
 
-  patches = lib.optionals stdenv.isDarwin [
-    ./fix-tsd-build-on-macos.patch
-  ];
   postPatch = ''
     echo $PWD
     ls
