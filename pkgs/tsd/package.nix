@@ -39,14 +39,14 @@ let
 in
 stdenv.mkDerivation {
   pname = "tsd";
-  version = "0.13.0-unstable-2026-03-14";
+  version = "0.13.0-unstable-2026-03-18";
 
   # Main source. Hosted as part of VisRTX.
   src = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "VisRTX";
-    rev = "596e8d30f4bc7050fef7ce3dd816ebd0bb851e62";
-    hash = "sha256-uGiDHnFjx91khvssz3FDp2Hs0hQeRk9OpKNNGAUmP04=";
+    rev = "d126851aa89995d03669efac0262cba75fbdacd6";
+    hash = "sha256-R3L3gl5fx/bDUMml+3J8r0g4DzP0Ry5U9H0aQcrkxPA=";
   };
 
   postPatch = ''
