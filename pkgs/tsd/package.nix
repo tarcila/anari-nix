@@ -50,13 +50,16 @@ stdenv.mkDerivation {
   };
 
   postPatch = ''
-    echo $PWD
-    ls
-    cp -rv ../devices/rtx/external/fmtlib ./external/fmtlib
-    cp -rv ../devices/rtx/external/stb_image ./external/stb_image
-    substituteInPlace ./external/CMakeLists.txt \
-      --replace-fail "../../devices/rtx/external/fmtlib" "fmtlib" \
-      --replace-fail "../../devices/rtx/external/stb_image" "stb_image"
+        cp -rv ../devices/rtx/external/fmtlib ./external/fmtlib
+        cp -rv ../devices/rtx/external/nonstd ./external/nonstd
+        cp -rv ../devices/rtx/external/stb_image ./external/stb_image
+        substituteInPlace ./external/CMakeLists.txt \
+          --replace-fail "add_subdirectory(
+      \''${CMAKE_CURRENT_LIST_DIR}/../../devices/rtx/external
+      \''${CMAKE_CURRENT_BINARY_DIR}/tsd_visrtx_external
+    )" "add_subdirectory(fmtlib)
+    add_subdirectory(nonstd)
+    add_subdirectory(stb_image)"
   '';
 
   sourceRoot = "./source/tsd";
