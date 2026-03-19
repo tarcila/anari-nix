@@ -39,24 +39,27 @@ let
 in
 stdenv.mkDerivation {
   pname = "tsd";
-  version = "0.13.0-unstable-2026-03-14";
+  version = "0.13.0-unstable-2026-03-18";
 
   # Main source. Hosted as part of VisRTX.
   src = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "VisRTX";
-    rev = "596e8d30f4bc7050fef7ce3dd816ebd0bb851e62";
-    hash = "sha256-uGiDHnFjx91khvssz3FDp2Hs0hQeRk9OpKNNGAUmP04=";
+    rev = "d126851aa89995d03669efac0262cba75fbdacd6";
+    hash = "sha256-R3L3gl5fx/bDUMml+3J8r0g4DzP0Ry5U9H0aQcrkxPA=";
   };
 
   postPatch = ''
-    echo $PWD
-    ls
-    cp -rv ../devices/rtx/external/fmtlib ./external/fmtlib
-    cp -rv ../devices/rtx/external/stb_image ./external/stb_image
-    substituteInPlace ./external/CMakeLists.txt \
-      --replace-fail "../../devices/rtx/external/fmtlib" "fmtlib" \
-      --replace-fail "../../devices/rtx/external/stb_image" "stb_image"
+        cp -rv ../devices/rtx/external/fmtlib ./external/fmtlib
+        cp -rv ../devices/rtx/external/nonstd ./external/nonstd
+        cp -rv ../devices/rtx/external/stb_image ./external/stb_image
+        substituteInPlace ./external/CMakeLists.txt \
+          --replace-fail "add_subdirectory(
+      \''${CMAKE_CURRENT_LIST_DIR}/../../devices/rtx/external
+      \''${CMAKE_CURRENT_BINARY_DIR}/tsd_visrtx_external
+    )" "add_subdirectory(fmtlib)
+    add_subdirectory(nonstd)
+    add_subdirectory(stb_image)"
   '';
 
   sourceRoot = "./source/tsd";
