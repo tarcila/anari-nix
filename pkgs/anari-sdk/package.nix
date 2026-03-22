@@ -31,10 +31,6 @@ stdenv.mkDerivation {
     hash = "sha256-pF64qj9seZfo7smi/PI1ZCca7tRmKook+yLfvIjNqxM=";
   };
 
-  patches = [
-    ./fix-macos-hidpi.patch
-  ];
-
   postUnpack = ''
     mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/"
     cp "${anari_viewer_imgui_sdl}" "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/v1.91.7-docking.zip"
