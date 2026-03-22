@@ -21,19 +21,15 @@ let
 in
 stdenv.mkDerivation {
   pname = "anari-sdk";
-  version = "0.15.0-unstable-2026-03-18";
+  version = "0.15.0-unstable-2026-03-20";
 
   # Main source
   src = fetchFromGitHub {
     owner = "KhronosGroup";
     repo = "ANARI-SDK";
-    rev = "b5a4dc365c4542961e936d6b8371b43af080138f";
-    hash = "sha256-vhxl+HYBiPfmOPQzPQJizpqUl9N3B87dIPnhK5L/zQU=";
+    rev = "b50ddc5e7f820c626c74fa177c6107438985a59f";
+    hash = "sha256-pF64qj9seZfo7smi/PI1ZCca7tRmKook+yLfvIjNqxM=";
   };
-
-  patches = [
-    ./fix-macos-hidpi.patch
-  ];
 
   postUnpack = ''
     mkdir -p "''${sourceRoot}/.anari_deps/anari_viewer_imgui_sdl/"
