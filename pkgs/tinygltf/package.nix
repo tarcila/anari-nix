@@ -9,7 +9,7 @@
 }:
 stdenv.mkDerivation {
   pname = "tinygltf";
-  version = "2.9.7";
+  version = "3.0.0";
 
   src = fetchFromGitHub {
     owner = "syoyo";

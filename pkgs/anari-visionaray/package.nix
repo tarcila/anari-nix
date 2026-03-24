@@ -14,14 +14,14 @@
 }:
 stdenv.mkDerivation {
   pname = "anari-visionaray";
-  version = "0-unstable-2026-03-21";
+  version = "0-unstable-2026-03-24";
 
   # Main source.
   src = fetchFromGitHub {
     owner = "szellmann";
     repo = "anari-visionaray";
-    rev = "fbc0d8a14cc882011d1c1b0c1882a05d6890864e";
-    hash = "sha256-K9dECXvj1apOiB9z6FZ3gSDd97+nIMEGZj0dcQxgkmw=";
+    rev = "d48b467a574d013b4846e4aacc1f6c3fa91a1f52";
+    hash = "sha256-fKI408S3A/cPYrEtuorDBiSoMynAt38CnFstpbU/ET4=";
     fetchSubmodules = true;
   };
 
