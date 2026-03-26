@@ -58,7 +58,7 @@ stdenv.mkDerivation {
     (cmakeBool "BUILD_CTS" false)
     (cmakeBool "BUILD_EXAMPLES" true)
     (cmakeBool "BUILD_TESTING" false)
-    (cmakeBool "BUILD_VIEWER" false)
+    (cmakeBool "BUILD_VIEWER" true)
     (cmakeBool "FETCHCONTENT_FULLY_DISCONNECTED" true)
     (cmakeBool "USE_DRACO" false)
     (cmakeBool "USE_KTX" false)
@@ -67,6 +67,14 @@ stdenv.mkDerivation {
 
     (cmakeBool "BUILD_HELIDE_DEVICE" false)
   ];
+
+  # The upstream install flattens scenes/scene.h next to anari_test_scenes.h,
+  # but scene.h still uses #include "../anari_test_scenes.h" (the source tree
+  # relative path). Fix the include to match the flat installed layout.
+  postInstall = ''
+    substituteInPlace "$out/include/anari/anari_test_scenes/scene.h" \
+      --replace-fail '../anari_test_scenes.h' 'anari_test_scenes.h'
+  '';
 
   passthru.updateScript = nix-update-script {
     extraArgs = [
