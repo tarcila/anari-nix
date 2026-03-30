@@ -16,13 +16,13 @@
 }:
 stdenv.mkDerivation {
   pname = "barney";
-  version = "0-unstable-2026-03-09";
+  version = "0-unstable-2026-03-30";
 
   src = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "barney";
-    rev = "b36315e81d385bc7a19cdb5e6d0b1bb049810318";
-    hash = "sha256-oj3AqyYjV3OUK/sWCl+6jrmXj4JiO3rlDQ1xWxXZh7I=";
+    rev = "9b862940f7099074ffe06811c3aa3a8e289b7ed6";
+    hash = "sha256-JrxvwFHWGVaVkaYQamFFXlBgcDMdZCKRqJTZf9DnmXY=";
     fetchSubmodules = true;
   };
 
