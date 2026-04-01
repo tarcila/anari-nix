@@ -30,13 +30,13 @@ let
 in
 stdenv.mkDerivation {
   pname = "anari-cat";
-  version = "0.15.0-unstable-2026-03-28";
+  version = "0.15.0-unstable-2026-03-31";
 
   src = fetchFromGitHub {
     owner = "KhronosGroup";
     repo = "ANARI-SDK";
-    rev = "c476c979277da5a9dc8f7ec821416e6394039020";
-    hash = "sha256-LZ8TBB3yUtwF7dgfgVLfjyBmWiL0rVd6KR1G5ds7mrU=";
+    rev = "55f09cf96f329c60967511b087190bb76ca73089";
+    hash = "sha256-nm7LSHVd0bEfiIjLFneAc9ngviZ/GVn6mfiE38ZrdZc=";
   };
   sourceRoot = "source/cat";
 
