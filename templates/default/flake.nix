@@ -59,7 +59,6 @@
             anari-barney
             visrtx
           ])
-          ++ (lib.optionals (system == "x86_64-linux") [ visgl ])
         );
 
       anariDevices =
