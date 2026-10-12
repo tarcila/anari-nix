@@ -24,8 +24,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "szellmann";
     repo = "visionaray";
-    rev = "906c1eb3224facbffe9f4e7282f90386fdd6ace9";
-    hash = "sha256-/ewshhBGAA7yy+tg4hUhgTsltfwW0g0V6fbKxhEBAg8=";
+    rev = "a2c5991ea000d989635cbe1e5248d484fae083fb";
+    hash = "sha256-3K83jPuEZZvwAFfJAcgO9WXzgeIgOflJ9ueAIDE8Bow=";
     fetchSubmodules = true;
   };
 
@@ -49,11 +49,6 @@ stdenv.mkDerivation {
   ++ lib.optionals cudaSupport [
     cudaPackages.cuda_cccl
     cudaPackages.cuda_cudart
-  ];
-
-  patches = [
-    ./0001-harden-bitcast.patch
-    ./0002-use-bitcast-for-simd-lane-access.patch
   ];
 
   postUnpack = ''
