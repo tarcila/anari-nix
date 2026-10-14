@@ -31,12 +31,12 @@
 }:
 let
   imgui-src = fetchurl {
-    url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.7-docking.zip";
-    hash = "sha256-glnDJORdpGuZ8PQ4uBYfeOh0kmCzJmNnI9zHOnSwePQ=";
+    url = "https://github.com/ocornut/imgui/archive/refs/tags/v1.92.9b-docking.zip";
+    hash = "sha256-BDREUVeldfRS/w8tFoH92Q6ok54MaYPm+OR8UfuhvM0=";
   };
   imguizmo-src = fetchurl {
-    url = "https://github.com/CedricGuillemet/ImGuizmo/archive/71f14292205c3317122b39627ed98efce137086a.zip";
-    hash = "sha256-kOrhHDy5hMGAC95Q1CbfpPNh1D9LQBg48I5H/GGzjRw=";
+    url = "https://github.com/CedricGuillemet/ImGuizmo/archive/105e4fde45e4e74aae8973d98750820ef7aca7e2.zip";
+    hash = "sha256-dU/KToxmxaJV+VMjm1GBOFIokj9kbRo5vcpboYrMfP0=";
   };
   openusdCore = openusd.override {
     # Vela only needs OpenUSD library support. Nixpkgs' top-level openusd enables
@@ -47,22 +47,22 @@ let
 in
 stdenv.mkDerivation {
   pname = "vela";
-  version = "0-unstable-2026-10-07";
+  version = "0-unstable-2026-10-13";
 
   src = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "Vela";
-    rev = "8d89901c567c0fca43c87a39073b3eea0f6eb5a1";
-    hash = "sha256-5bCc7zk9UP4QS26jb6EVtwiLtgwbs4yMt1oa63TndzY=";
+    rev = "b4117c95cfdfc923b3932b1356d847ac0feee18a";
+    hash = "sha256-pH95xxdq5VqJieO+8B13ijm5udHRCm13vXs5Dqp4T8o=";
   };
 
   # anari_sdk_fetch_project() downloads into `.anari_deps/<name>` under the
   # source root; seeding it there keeps the build offline.
   postUnpack = ''
     mkdir -p "''${sourceRoot}/.anari_deps/vela_ext_imgui_sdl/"
-    cp "${imgui-src}" "''${sourceRoot}/.anari_deps/vela_ext_imgui_sdl/v1.91.7-docking.zip"
+    cp "${imgui-src}" "''${sourceRoot}/.anari_deps/vela_ext_imgui_sdl/v1.92.9b-docking.zip"
     mkdir -p "''${sourceRoot}/.anari_deps/vela_ext_imguizmo/"
-    cp "${imguizmo-src}" "''${sourceRoot}/.anari_deps/vela_ext_imguizmo/71f14292205c3317122b39627ed98efce137086a.zip"
+    cp "${imguizmo-src}" "''${sourceRoot}/.anari_deps/vela_ext_imguizmo/105e4fde45e4e74aae8973d98750820ef7aca7e2.zip"
   '';
 
   patches = [
