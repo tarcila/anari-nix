@@ -164,7 +164,7 @@ let
           (metadata.getVersionFile "clang/gnu-install-dirs.patch")
         ]
         ++
-          lib.optional (stdenv.isAarch64 && lib.versions.major metadata.release_version == "17")
+          lib.optional (stdenv.hostPlatform.isAarch64 && lib.versions.major metadata.release_version == "17")
             # Fixes llvm17 tblgen builds on aarch64.
             # https://github.com/llvm/llvm-project/issues/106521#issuecomment-2337175680
             (metadata.getVersionFile "clang/aarch64-tblgen.patch");
