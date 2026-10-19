@@ -75,7 +75,7 @@ stdenv.mkDerivation {
     zlib
     zstd
   ]
-  ++ lib.optionals stdenv.isDarwin [
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
     apple-sdk_14
     sse2neon
   ]
@@ -105,7 +105,7 @@ stdenv.mkDerivation {
       # denoiser support.
       (cmakeBool "ANARI_CYCLES_USE_OIDN" true)
     ]
-    ++ lib.optionals stdenv.isDarwin (
+    ++ lib.optionals stdenv.hostPlatform.isDarwin (
       with lib;
       [
         (cmakeBool "WITH_CYCLES_DEVICE_METAL" true)

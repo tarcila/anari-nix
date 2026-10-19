@@ -58,13 +58,13 @@ stdenv.mkDerivation {
     opensubdiv
     tbb
   ]
-  ++ lib.optionals stdenv.isLinux [
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
     # What's need for MaterialX on Linux
     libx11
     libxt
     libGL
   ]
-  ++ lib.optionals stdenv.isDarwin [
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
     apple-sdk_14
   ];
 

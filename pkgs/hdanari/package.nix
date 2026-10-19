@@ -48,7 +48,7 @@ stdenv.mkDerivation {
     opensubdiv
     tbb
   ]
-  ++ lib.optionals stdenv.isLinux [
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
     # What's need for MaterialX on Linux
     libx11
     libxt
@@ -58,12 +58,12 @@ stdenv.mkDerivation {
     # removed clang12.
     mdl-sdk
   ]
-  ++ lib.optionals stdenv.isDarwin [
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
     apple-sdk_14
   ];
 
   cmakeFlags = [
-    (lib.cmakeBool "HDANARI_ENABLE_MDL" (!stdenv.isDarwin))
+    (lib.cmakeBool "HDANARI_ENABLE_MDL" (!stdenv.hostPlatform.isDarwin))
   ];
 
   # Special case for OPENUSD_PLUGIN_INSTALL_PREFIX...
