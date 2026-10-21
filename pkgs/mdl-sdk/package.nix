@@ -30,7 +30,15 @@ let
       null;
   pkgsLlvmOverlay = pkgs.appendOverlays [ (_self: _super: { inherit llvmPackages_12; }) ];
   llvmPackagesSet = lib.recurseIntoAttrs (
-    pkgsLlvmOverlay.callPackages ./llvm { inherit preLibcCrossHeaders; }
+    pkgsLlvmOverlay.callPackages ./llvm {
+      inherit preLibcCrossHeaders;
+      # MDL-SDK only consumes libLLVM/libclang as libraries; it never runs
+      # LLVM's test suite. The bundled LLVM 12 can't compile its unit tests
+      # with the current default GCC without ICEing (an IRA segmentation
+      # fault in gtest's CmpHelperOpFailure), so skip checks here rather than
+      # at every call site.
+      libllvmDoCheck = false;
+    }
   );
   llvmPackages_12 = llvmPackagesSet."12";
 in

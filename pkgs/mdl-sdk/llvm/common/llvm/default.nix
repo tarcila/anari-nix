@@ -34,6 +34,7 @@
   enablePolly ? lib.versionAtLeast release_version "14",
   enableTerminfo ? true,
   devExtraCmakeFlags ? [ ],
+  doCheck ? true,
   getVersionFile,
   fetchpatch,
 }:
@@ -722,7 +723,8 @@ stdenv.mkDerivation (
     );
 
     doCheck =
-      !isDarwinBootstrap
+      doCheck
+      && !isDarwinBootstrap
       && !stdenv.hostPlatform.isAarch32
       && (if lib.versionOlder release_version "15" then stdenv.hostPlatform.isLinux else true)
       && (
