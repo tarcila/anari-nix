@@ -17,20 +17,20 @@ let
 in
 stdenv.mkDerivation {
   pname = "anari-helide";
-  version = "0.16.0-unstable-2026-10-15";
+  version = "0.16.0-unstable-2026-10-21";
 
   # Main source
   src = fetchFromGitHub {
     owner = "KhronosGroup";
     repo = "ANARI-SDK";
-    rev = "4cc22f350b61d2168c6b07867005c63213edc6f4";
-    hash = "sha256-G09tBgiBD+dyG7b/FR4uyty6cb1dejbccvWTqXB1YLc=";
+    rev = "e3d54e71c553d5503cac81759f3ce533e794b7e5";
+    hash = "sha256-6G778sCms89/oCaAULMZ7bNglcMvLANkJI81vm1lsbE=";
   };
   sourceRoot = "source/src/devices/helide";
 
   postUnpack = ''
-    mkdir -p "''${sourceRoot}/.anari_deps/anari_helide_embree/"
-    cp "${embree_for_helide-src}" "''${sourceRoot}/.anari_deps/anari_helide_embree/v4.3.3.zip"
+    mkdir -p "''${sourceRoot}/.anari_deps/anari_embree/"
+    cp "${embree_for_helide-src}" "''${sourceRoot}/.anari_deps/anari_embree/v4.3.3.zip"
   '';
 
   nativeBuildInputs = [

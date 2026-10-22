@@ -16,14 +16,14 @@
 }:
 stdenv.mkDerivation {
   pname = "haystack";
-  version = "0.9.0-unstable-2026-10-20";
+  version = "0.9.0-unstable-2026-10-21";
 
   src = fetchFromGitHub {
     owner = "ingowald";
     repo = "HayStack";
-    rev = "46d787e79e6346bd5cd50f8427c70cdaad73f72f";
+    rev = "60b95a5c677e6d2d1a508f488499564d4c75115c";
     fetchSubmodules = true;
-    hash = "sha256-5+zQv4Usxz7ZPmnHZgPMCLX2530Sa4skq/NtPXQpq0k=";
+    hash = "sha256-cuxvBgL0Yg9NoiRTU3Qyq1eCypwoA/ZrV6i81Bc5uiY=";
   };
 
   cmakeFlags = [
