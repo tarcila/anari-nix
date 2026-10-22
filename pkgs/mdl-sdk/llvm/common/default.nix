@@ -5,6 +5,7 @@
   lib,
   stdenv,
   preLibcCrossHeaders,
+  libllvmDoCheck ? true,
   libxcrypt,
   substitute,
   replaceVars,
@@ -145,6 +146,7 @@ let
     in
     {
       libllvm = callPackage ./llvm {
+        doCheck = libllvmDoCheck;
       };
 
       # `llvm` historically had the binaries.  When choosing an output explicitly,
