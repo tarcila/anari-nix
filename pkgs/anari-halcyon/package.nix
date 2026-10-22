@@ -78,8 +78,14 @@ stdenv.mkDerivation {
   # tinyexr's archive contains non-ASCII filenames.
   env.LC_ALL = if stdenv.hostPlatform.isDarwin then "en_US.UTF-8" else "C.UTF-8";
 
-  # Tests fail to run correctly on Darwin.
-  doCheck = !stdenv.hostPlatform.isDarwin;
+  doCheck = true;
+
+  # Upstream's tests point the ANARI loader at the build-tree device with
+  # LD_LIBRARY_PATH, which dyld ignores: without this the loader falls back to
+  # an anchored load next to the installed libanari and finds no halcyon.
+  preCheck = lib.optionalString stdenv.hostPlatform.isDarwin ''
+    export DYLD_LIBRARY_PATH="$PWD''${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
+  '';
 
   passthru.updateScript = nix-update-script {
     extraArgs = [
