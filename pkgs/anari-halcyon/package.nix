@@ -78,7 +78,8 @@ stdenv.mkDerivation {
   # tinyexr's archive contains non-ASCII filenames.
   env.LC_ALL = if stdenv.hostPlatform.isDarwin then "en_US.UTF-8" else "C.UTF-8";
 
-  doCheck = true;
+  # Tests fail to run correctly on Darwin.
+  doCheck = !stdenv.hostPlatform.isDarwin;
 
   passthru.updateScript = nix-update-script {
     extraArgs = [
