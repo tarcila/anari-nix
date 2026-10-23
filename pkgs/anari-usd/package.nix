@@ -16,15 +16,6 @@
   imath,
   nix-update-script,
 }:
-let
-  openusdCore = openusd.override {
-    # ANARI-USD only needs OpenUSD library support. Nixpkgs' top-level openusd
-    # enables USDView/tools, which pulls PyQt6 -> QtWebEngine and breaks on
-    # aarch64-darwin.
-    withUsdView = false;
-    withTools = false;
-  };
-in
 stdenv.mkDerivation {
   pname = "anari-usd";
   version = "0.16.0-unstable-2026-08-19";
@@ -54,7 +45,7 @@ stdenv.mkDerivation {
     anari-sdk
     imath
     materialx
-    openusdCore
+    openusd
     opensubdiv
     tbb
   ]
