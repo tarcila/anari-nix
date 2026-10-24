@@ -5,6 +5,7 @@
   fetchFromGitHub,
   config,
   cudaSupport ? config.cudaSupport,
+  openimageio,
   cmake,
   anari-sdk,
   libGL,
@@ -76,6 +77,8 @@ stdenv.mkDerivation {
     (lib.cmakeBool "VSR_USE_ASSIMP" true)
     (lib.cmakeBool "VSR_USE_HDF5" true)
     (lib.cmakeBool "VSR_USE_LUA" true)
+    # Texture formats stb cannot decode (e.g. TIFF), needed by USD/MaterialX assets.
+    (lib.cmakeBool "VSR_USE_OIIO" true)
     (lib.cmakeBool "VSR_USE_NETWORKING" true)
     (lib.cmakeBool "VSR_USE_SDL3" true)
     (lib.cmakeBool "VSR_USE_TURBOJPEG" true)
@@ -151,6 +154,7 @@ stdenv.mkDerivation {
     lua54Packages.lua
     hdf5
     materialx
+    openimageio
     opensubdiv
     openusd
     silo
